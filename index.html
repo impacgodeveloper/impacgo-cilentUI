@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>UI Style & Brand Color Playground</title>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%232563EB'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='900'%3EU%3C/text%3E%3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Poppins:wght@400;600;700&family=Playfair+Display:wght@500;600;700&family=Merriweather:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- =========================
+         AMBIENT BACKGROUND
+    ========================== -->
+
+    <div class="bg-decor" aria-hidden="true">
+        <span class="blob blob-a"></span>
+        <span class="blob blob-b"></span>
+        <span class="blob blob-c"></span>
+    </div>
+
+    <!-- =========================
+         TOP HEADER
+    ========================== -->
+
+    <header class="topbar load-in d-0">
+
+        <div class="brand">
+            <div class="brand-mark">UI</div>
+
+            <div>
+                <h1>UI Style Playground</h1>
+                <p id="brandSubtitle">Choose your visual direction</p>
+            </div>
+        </div>
+
+        <div class="top-actions">
+
+            <span class="live-pill">
+                <i class="live-dot"></i>
+                Live preview
+            </span>
+
+            <button
+                id="compareBtn"
+                class="secondary-btn"
+            >
+                ⇄ Compare Styles
+            </button>
+
+            <button
+                id="summaryBtn"
+                class="primary-btn"
+            >
+                ✓ Selection Summary
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         MAIN LAYOUT
+    ========================== -->
+
+    <main class="layout">
+
+
+        <!-- =========================
+             LEFT SIDEBAR
+        ========================== -->
+
+        <aside class="sidebar load-in d-1">
+
+            <div class="sidebar-title">
+                <span>01</span>
+                Customize
+            </div>
+
+            <div class="sidebar-tabs" role="tablist">
+
+                <button class="sidebar-tab active" data-tab="styles" role="tab" aria-selected="true">
+                    🎨 Styles
+                </button>
+
+                <button class="sidebar-tab" data-tab="colors" role="tab" aria-selected="false">
+                    🖌 Colors
+                </button>
+
+                <button class="sidebar-tab" data-tab="fonts" role="tab" aria-selected="false">
+                    Aa Fonts
+                </button>
+
+                <button class="sidebar-tab" data-tab="elements" role="tab" aria-selected="false">
+                    🧩 Elements
+                </button>
+
+            </div>
+
+            <div class="sidebar-panels">
+
+                <!-- STYLES -->
+
+                <div class="sidebar-panel active" data-panel="styles">
+
+                    <div id="styleList" class="style-list">
+                        <!-- JavaScript inserts styles -->
+                    </div>
+
+                </div>
+
+
+                <!-- COLORS -->
+
+                <div class="sidebar-panel" data-panel="colors">
+
+                    <div class="panel-heading">
+
+                        <div>
+                            <span class="eyebrow">
+                                BRAND COLORS
+                            </span>
+
+                            <h3>
+                                Customize your colors
+                            </h3>
+                        </div>
+
+                        <button
+                            id="resetColors"
+                            class="text-btn"
+                        >
+                            Reset
+                        </button>
+
+                    </div>
+
+
+                    <div class="color-controls">
+
+
+                        <!-- PRIMARY -->
+
+                        <div class="color-control">
+
+                            <label for="primaryColor">
+                                Primary Color
+                            </label>
+
+                            <div class="color-input">
+
+                                <input
+                                    type="color"
+                                    id="primaryColor"
+                                    value="#2563EB"
+                                >
+
+                                <input
+                                    type="text"
+                                    id="primaryHex"
+                                    value="#2563EB"
+                                    maxlength="7"
+                                >
+
+                            </div>
+
+                            <small>
+                                Main brand color used for buttons,
+                                links and active elements.
+                            </small>
+
+                        </div>
+
+
+                        <!-- SECONDARY -->
+
+                        <div class="color-control">
+
+                            <label for="secondaryColor">
+                                Secondary Color
+                            </label>
+
+                            <div class="color-input">
+
+                                <input
+                                    type="color"
+                                    id="secondaryColor"
+                                    value="#7C3AED"
+                                >
+
+                                <input
+                                    type="text"
+                                    id="secondaryHex"
+                                    value="#7C3AED"
+                                    maxlength="7"
+                                >
+
+                            </div>
+
+                            <small>
+                                Supporting color used for accents,
+                                highlights and secondary actions.
+                            </small>
+
+                        </div>
+
+
+                        <!-- BACKGROUND -->
+
+                        <div class="color-control">
+
+                            <label for="backgroundColor">
+                                Background
+                            </label>
+
+                            <div class="color-input">
+
+                                <input
+                                    type="color"
+                                    id="backgroundColor"
+                                    value="#F8FAFC"
+                                >
+
+                                <input
+                                    type="text"
+                                    id="backgroundHex"
+                                    value="#F8FAFC"
+                                    maxlength="7"
+                                >
+
+                            </div>
+
+                            <small>
+                                Main page background and overall
+                                visual atmosphere.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PRESET COLORS -->
+
+                    <div class="preset-section">
+
+                        <span class="preset-title">
+                            Popular color combinations
+                        </span>
+
+                        <div class="presets">
+
+                            <button
+                                class="preset"
+                                data-primary="#2563EB"
+                                data-secondary="#7C3AED"
+                                data-background="#F8FAFC"
+                            >
+                                <span
+                                    style="background:#2563EB"
+                                ></span>
+
+                                <span
+                                    style="background:#7C3AED"
+                                ></span>
+
+                                Blue / Purple
+                            </button>
+
+
+                            <button
+                                class="preset"
+                                data-primary="#059669"
+                                data-secondary="#14B8A6"
+                                data-background="#F0FDFA"
+                            >
+                                <span
+                                    style="background:#059669"
+                                ></span>
+
+                                <span
+                                    style="background:#14B8A6"
+                                ></span>
+
+                                Emerald
+                            </button>
+
+
+                            <button
+                                class="preset"
+                                data-primary="#EA580C"
+                                data-secondary="#F59E0B"
+                                data-background="#FFF7ED"
+                            >
+                                <span
+                                    style="background:#EA580C"
+                                ></span>
+
+                                <span
+                                    style="background:#F59E0B"
+                                ></span>
+
+                                Orange
+                            </button>
+
+
+                            <button
+                                class="preset"
+                                data-primary="#DB2777"
+                                data-secondary="#9333EA"
+                                data-background="#FDF4FF"
+                            >
+                                <span
+                                    style="background:#DB2777"
+                                ></span>
+
+                                <span
+                                    style="background:#9333EA"
+                                ></span>
+
+                                Pink / Purple
+                            </button>
+
+
+                            <button
+                                class="preset"
+                                data-primary="#0F172A"
+                                data-secondary="#475569"
+                                data-background="#F8FAFC"
+                            >
+                                <span
+                                    style="background:#0F172A"
+                                ></span>
+
+                                <span
+                                    style="background:#475569"
+                                ></span>
+
+                                Corporate
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FONTS -->
+
+                <div class="sidebar-panel" data-panel="fonts">
+
+                    <div class="panel-heading">
+
+                        <div>
+                            <span class="eyebrow">
+                                TYPOGRAPHY
+                            </span>
+
+                            <h3>
+                                Try a different font
+                            </h3>
+                        </div>
+
+                        <button
+                            id="resetFont"
+                            class="text-btn"
+                        >
+                            Reset
+                        </button>
+
+                    </div>
+
+                    <p class="font-hint">
+                        Drag any font below onto the live preview
+                        to see your product in that typeface.
+                    </p>
+
+                    <div class="font-palette">
+
+                        <button
+                            class="font-chip"
+                            draggable="true"
+                            data-font="'Inter', ui-sans-serif, sans-serif"
+                            style="font-family:'Inter', sans-serif"
+                        >
+                            Aa Inter
+                        </button>
+
+                        <button
+                            class="font-chip"
+                            draggable="true"
+                            data-font="'Poppins', ui-sans-serif, sans-serif"
+                            style="font-family:'Poppins', sans-serif"
+                        >
+                            Aa Poppins
+                        </button>
+
+                        <button
+                            class="font-chip"
+                            draggable="true"
+                            data-font="'Space Grotesk', ui-sans-serif, sans-serif"
+                            style="font-family:'Space Grotesk', sans-serif"
+                        >
+                            Aa Space Grotesk
+                        </button>
+
+                        <button
+                            class="font-chip"
+                            draggable="true"
+                            data-font="'Playfair Display', Georgia, serif"
+                            style="font-family:'Playfair Display', serif"
+                        >
+                            Aa Playfair Display
+                        </button>
+
+                        <button
+                            class="font-chip"
+                            draggable="true"
+                            data-font="'Merriweather', Georgia, serif"
+                            style="font-family:'Merriweather', serif"
+                        >
+                            Aa Merriweather
+                        </button>
+
+                        <button
+                            class="font-chip"
+                            draggable="true"
+                            data-font="'JetBrains Mono', 'Courier New', monospace"
+                            style="font-family:'JetBrains Mono', monospace"
+                        >
+                            Aa Mono
+                        </button>
+
+                    </div>
+
+                    <div class="font-status">
+                        Currently using: <strong id="currentFontLabel">this style's default font</strong>
+                    </div>
+
+                </div>
+
+
+                <!-- ELEMENTS -->
+
+                <div class="sidebar-panel" data-panel="elements">
+
+                    <div class="panel-heading">
+
+                        <div>
+                            <span class="eyebrow">
+                                PAGE BUILDER
+                            </span>
+
+                            <h3>
+                                Drag elements into the preview
+                            </h3>
+                        </div>
+
+                    </div>
+
+                    <p class="elements-hint">
+                        Pick up any block below and drop it into the
+                        live preview to see how it looks in the
+                        selected UI style and brand colors.
+                    </p>
+
+                    <div class="elements-palette">
+
+                        <button class="element-chip" draggable="true" data-block="testimonial">
+                            <span>💬</span> Testimonial
+                        </button>
+
+                        <button class="element-chip" draggable="true" data-block="stats">
+                            <span>📊</span> Stats row
+                        </button>
+
+                        <button class="element-chip" draggable="true" data-block="pricing">
+                            <span>💳</span> Pricing
+                        </button>
+
+                        <button class="element-chip" draggable="true" data-block="cta">
+                            <span>🚀</span> CTA banner
+                        </button>
+
+                        <button class="element-chip" draggable="true" data-block="faq">
+                            <span>❓</span> FAQ
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =========================
+             MAIN CONTENT
+        ========================== -->
+
+        <section class="content">
+
+            <div class="preview-tips">
+
+                <span class="tip-chip">
+                    🧩 Drag elements above into the preview below
+                </span>
+
+                <span class="tip-chip">
+                    🎨 Select any text inside the preview to recolor it
+                </span>
+
+            </div>
+
+
+            <!-- =========================
+                 LIVE PREVIEW
+            ========================== -->
+
+            <div class="preview-frame">
+
+                <div class="frame-bar">
+
+                    <span class="frame-dots">
+                        <i></i><i></i><i></i>
+                    </span>
+
+                    <span class="frame-address" id="frameAddress">
+                        yourproduct.com
+                    </span>
+
+                    <span class="frame-badge" id="frameBadge">
+                        Previewing: Minimalism
+                    </span>
+
+                </div>
+
+            <section
+                id="preview"
+                class="preview minimalism"
+            >
+
+                <!-- PREVIEW NAVBAR -->
+
+                <nav class="preview-navbar">
+
+                    <div class="preview-logo" id="previewLogo">
+                        Acme
+                    </div>
+
+                    <div class="preview-navlinks">
+
+                        <span>Dashboard</span>
+                        <span>Products</span>
+                        <span>Analytics</span>
+
+                    </div>
+
+                    <button class="preview-button">
+                        Get Started
+                    </button>
+
+                </nav>
+
+
+                <!-- PREVIEW HERO -->
+
+                <div class="preview-content">
+
+                    <div class="preview-hero">
+
+                        <svg class="hero-decor mesh-decor" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                            <defs>
+                                <radialGradient id="meshA" cx="20%" cy="25%" r="55%">
+                                    <stop class="stop-primary" offset="0%" />
+                                    <stop class="stop-primary-fade" offset="100%" />
+                                </radialGradient>
+                                <radialGradient id="meshB" cx="80%" cy="20%" r="55%">
+                                    <stop class="stop-secondary" offset="0%" />
+                                    <stop class="stop-secondary-fade" offset="100%" />
+                                </radialGradient>
+                                <radialGradient id="meshC" cx="65%" cy="80%" r="55%">
+                                    <stop class="stop-primary" offset="0%" />
+                                    <stop class="stop-primary-fade" offset="100%" />
+                                </radialGradient>
+                                <radialGradient id="meshD" cx="15%" cy="85%" r="45%">
+                                    <stop class="stop-highlight" offset="0%" />
+                                    <stop class="stop-highlight-fade" offset="100%" />
+                                </radialGradient>
+                            </defs>
+                            <rect width="800" height="500" fill="url(#meshA)" />
+                            <rect width="800" height="500" fill="url(#meshB)" />
+                            <rect width="800" height="500" fill="url(#meshC)" />
+                            <rect width="800" height="500" fill="url(#meshD)" />
+                        </svg>
+
+                        <svg class="hero-decor organic-decor" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                            <path
+                                class="leaf-shape"
+                                d="M560,60 C660,90 740,180 740,270 C740,375 660,455 560,470 C460,455 380,375 380,270 C380,180 460,90 560,60 Z"
+                            />
+                            <path class="leaf-vein" d="M560,90 L560,445" />
+                            <path class="leaf-vein" d="M560,170 C500,205 450,230 400,250" />
+                            <path class="leaf-vein" d="M560,250 C625,280 675,305 720,330" />
+                            <path class="leaf-vein" d="M560,330 C500,360 450,380 410,400" />
+                            <circle class="leaf-dot" cx="180" cy="120" r="60" />
+                            <circle class="leaf-dot" cx="140" cy="380" r="90" />
+                        </svg>
+
+                        <svg class="hero-decor tech-decor" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                            <polygon class="hex" points="560,90 690,165 690,315 560,390 430,315 430,165" />
+                            <polygon class="hex hex-inner" points="560,150 630,190 630,290 560,330 490,290 490,190" />
+                            <line class="tech-line" x1="560" y1="90" x2="560" y2="30" />
+                            <line class="tech-line" x1="690" y1="240" x2="760" y2="240" />
+                            <line class="tech-line" x1="430" y1="240" x2="360" y2="240" />
+                            <line class="tech-line" x1="500" y1="360" x2="440" y2="410" />
+                            <line class="tech-line" x1="620" y1="360" x2="680" y2="410" />
+                            <circle class="tech-dot" cx="560" cy="30" r="7" />
+                            <circle class="tech-dot" cx="760" cy="240" r="7" />
+                            <circle class="tech-dot" cx="360" cy="240" r="7" />
+                            <circle class="tech-dot" cx="440" cy="410" r="7" />
+                            <circle class="tech-dot" cx="680" cy="410" r="7" />
+                            <circle class="tech-dot tech-dot-core" cx="560" cy="240" r="12" />
+                        </svg>
+
+                        <div class="hero-copy">
+
+                            <span class="preview-badge">
+                                NEW EXPERIENCE
+                            </span>
+
+                            <h2>
+                                Build something
+                                people love.
+                            </h2>
+
+                            <p>
+                                This is a live example of how
+                                your selected UI style can look
+                                with your chosen brand colors.
+                            </p>
+
+                            <div class="hero-actions">
+
+                                <button class="preview-button">
+                                    Primary Action
+                                </button>
+
+                                <button class="preview-secondary">
+                                    Learn More
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <div class="hero-visual">
+
+                            <div class="visual-card">
+
+                                <span class="mini-label">
+                                    Revenue
+                                </span>
+
+                                <strong
+                                    id="revenueCount"
+                                    data-count="84250"
+                                    data-prefix="₹"
+                                >
+                                    ₹0
+                                </strong>
+
+                                <span class="positive">
+                                    ↑ <span
+                                        id="growthCount"
+                                        data-count="18.4"
+                                        data-decimals="1"
+                                    >0</span>%
+                                </span>
+
+                                <div class="chart" id="revenueChart">
+
+                                    <i style="--h:25%"></i>
+                                    <i style="--h:40%"></i>
+                                    <i style="--h:35%"></i>
+                                    <i style="--h:60%"></i>
+                                    <i style="--h:50%"></i>
+                                    <i style="--h:78%"></i>
+                                    <i style="--h:95%"></i>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PREVIEW CARDS -->
+
+                    <div class="preview-grid">
+
+                        <div class="preview-card">
+
+                            <span class="card-icon">
+                                ◈
+                            </span>
+
+                            <h3>
+                                Simple
+                            </h3>
+
+                            <p>
+                                Clean interfaces with
+                                clear visual hierarchy.
+                            </p>
+
+                        </div>
+
+
+                        <div class="preview-card">
+
+                            <span class="card-icon">
+                                ✦
+                            </span>
+
+                            <h3>
+                                Modern
+                            </h3>
+
+                            <p>
+                                Contemporary components
+                                designed for today's products.
+                            </p>
+
+                        </div>
+
+
+                        <div class="preview-card">
+
+                            <span class="card-icon">
+                                ◎
+                            </span>
+
+                            <h3>
+                                Flexible
+                            </h3>
+
+                            <p>
+                                Works across websites,
+                                dashboards and applications.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- FORM -->
+
+                    <div class="preview-form">
+
+                        <div>
+
+                            <span class="mini-label">
+                                EXAMPLE FORM
+                            </span>
+
+                            <h3>
+                                Contact information
+                            </h3>
+
+                        </div>
+
+                        <div class="form-grid">
+
+                            <div>
+
+                                <label>
+                                    Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    placeholder="Enter your name"
+                                >
+
+                            </div>
+
+                            <div>
+
+                                <label>
+                                    Email
+                                </label>
+
+                                <input
+                                    type="email"
+                                    placeholder="Enter your email"
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <button class="preview-button">
+                            Submit
+                        </button>
+
+                    </div>
+
+
+                    <!-- DROP ZONE (page builder) -->
+
+                    <div class="drop-zone" id="dropZone">
+                        <span>⬇ Drop an element here to add it to this preview</span>
+                    </div>
+
+                </div>
+
+            </section>
+
+            </div>
+
+
+            <!-- =========================
+                 STYLE INFORMATION
+            ========================== -->
+
+            <section class="style-information">
+
+                <div>
+
+                    <span class="eyebrow">
+                        SELECTED STYLE
+                    </span>
+
+                    <div class="style-heading-row">
+
+                        <span
+                            class="style-icon-lg"
+                            id="styleIconLg"
+                        >
+                            ○
+                        </span>
+
+                        <h2 id="styleName">
+                            Minimalism
+                        </h2>
+
+                    </div>
+
+                    <p id="styleDescription">
+                        A clean and simple visual language that
+                        focuses on clarity, whitespace and usability.
+                    </p>
+
+                </div>
+
+                <div class="style-tags" id="styleTags">
+                    <!-- JS -->
+                </div>
+
+            </section>
+
+            <!-- =========================
+                 HOW IT WORKS
+                 (plain-language guide for
+                 non-technical clients)
+            ========================== -->
+
+            <section class="how-it-works load-in d-1">
+
+                <div class="how-step">
+                    <span class="how-num">1</span>
+                    <div>
+                        <strong>Pick a style</strong>
+                        <p>Open the "Styles" tab in the panel on the left and click any one to preview it instantly, above.</p>
+                    </div>
+                </div>
+
+                <div class="how-step">
+                    <span class="how-num">2</span>
+                    <div>
+                        <strong>Make it yours</strong>
+                        <p>Switch to the Colors, Fonts or Elements tabs to try your own brand colors, drag in a typeface, or drop extra sections into the preview.</p>
+                    </div>
+                </div>
+
+                <div class="how-step">
+                    <span class="how-num">3</span>
+                    <div>
+                        <strong>Compare & decide</strong>
+                        <p>Use "Compare Styles" to see two side by side, then save your pick.</p>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- INTRO -->
+
+            <section class="intro">
+
+                <div class="intro-copy">
+
+                    <span class="kicker-badge load-in d-1">
+                        <i class="live-dot"></i>
+                        <span id="kickerText">Client Design Workshop</span>
+                    </span>
+
+                    <h2 class="load-in d-2">
+                        Find the perfect visual style
+                        for your product.
+                    </h2>
+
+                    <p class="load-in d-3" id="introBrandLine">
+                        Explore different UI styles, experiment with
+                        colors and select the visual direction that
+                        best represents your brand.
+                    </p>
+
+                    <div class="intro-stats load-in d-4">
+
+                        <div class="intro-stat">
+                            <strong data-count="15">0</strong>
+                            <span>UI styles</span>
+                        </div>
+
+                        <div class="intro-stat">
+                            <strong data-count="3">0</strong>
+                            <span>Brand colors</span>
+                        </div>
+
+                        <div class="intro-stat">
+                            <strong data-count="1">0</strong>
+                            <span>Perfect match</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="intro-visual load-in d-3" aria-hidden="true">
+
+                    <span class="deco-shape deco-ring"></span>
+                    <span class="deco-shape deco-plus">+</span>
+                    <span class="deco-shape deco-diamond"></span>
+                    <span class="deco-shape deco-dot"></span>
+
+                    <div class="floating-card card-1">
+                        <div class="mini-dots">
+                            <i></i><i></i><i></i>
+                        </div>
+                        <div class="mini-line w-70"></div>
+                        <div class="mini-line w-40"></div>
+                        <div class="mini-chip"></div>
+                    </div>
+
+                    <div class="floating-card card-2">
+                        <div class="mini-line w-60"></div>
+                        <div class="mini-line w-45"></div>
+                        <div class="mini-grid">
+                            <i></i><i></i><i></i>
+                        </div>
+                    </div>
+
+                    <div class="floating-card card-3">
+                        <div class="mini-circle"></div>
+                        <div class="mini-line w-50"></div>
+                        <div class="mini-line w-30"></div>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+
+            <!-- =========================
+                 EXPLANATION
+            ========================== -->
+
+            <section class="explanation">
+
+                <div class="explanation-column">
+
+                    <span class="column-icon">💡</span>
+
+                    <span class="eyebrow">
+                        WHAT IS THIS STYLE?
+                    </span>
+
+                    <h3 id="explanationTitle">
+                        Minimalism
+                    </h3>
+
+                    <p id="longDescription">
+                        Minimalism removes unnecessary visual
+                        elements and focuses on content,
+                        hierarchy and usability.
+                    </p>
+
+                </div>
+
+
+                <div class="explanation-column">
+
+                    <span class="column-icon">🎯</span>
+
+                    <span class="eyebrow">
+                        BEST FOR
+                    </span>
+
+                    <ul id="bestFor">
+                        <!-- JS -->
+                    </ul>
+
+                </div>
+
+
+                <div class="explanation-column">
+
+                    <span class="column-icon">✨</span>
+
+                    <span class="eyebrow">
+                        VISUAL CHARACTER
+                    </span>
+
+                    <ul id="characteristics">
+                        <!-- JS -->
+                    </ul>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 CLIENT DECISION
+            ========================== -->
+
+            <section class="decision-panel">
+
+                <span class="decision-decor" aria-hidden="true">✦</span>
+
+                <div>
+
+                    <span class="eyebrow">
+                        YOUR DESIGN DIRECTION
+                    </span>
+
+                    <h2 id="decisionHeading">
+                        What does your brand feel like?
+                    </h2>
+
+                    <p>
+                        Select the style that best represents
+                        your product and save the direction
+                        for the design team.
+                    </p>
+
+                </div>
+
+                <button
+                    id="selectStyle"
+                    class="large-select-btn"
+                >
+                    Select This Style
+                </button>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         SUMMARY MODAL
+    ========================== -->
+
+    <div
+        id="summaryModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-content">
+
+            <button
+                id="closeModal"
+                class="modal-close"
+            >
+                ×
+            </button>
+
+            <span class="eyebrow">
+                CLIENT DESIGN SUMMARY
+            </span>
+
+            <h2>
+                Selected Design Direction
+            </h2>
+
+            <div
+                id="summaryContent"
+                class="summary-content"
+            >
+                <!-- JS -->
+            </div>
+
+            <div class="summary-actions">
+
+                <button
+                    id="sendSummary"
+                    class="primary-btn"
+                >
+                    📧 Send to Agency
+                </button>
+
+                <button
+                    id="copySummary"
+                    class="secondary-btn"
+                >
+                    ⧉ Copy Summary
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         COMPARE STYLES MODAL
+    ========================== -->
+
+    <div
+        id="compareModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-content compare-modal-content">
+
+            <button
+                id="closeCompareModal"
+                class="modal-close"
+            >
+                ×
+            </button>
+
+            <span class="eyebrow">
+                SIDE-BY-SIDE COMPARISON
+            </span>
+
+            <h2>
+                Compare two UI styles
+            </h2>
+
+            <p class="compare-intro">
+                Pick two styles below to see them next to each
+                other, using your chosen brand colors. Click
+                "Use this style" under whichever one feels right.
+            </p>
+
+            <div class="compare-grid">
+
+                <div class="compare-column">
+
+                    <select id="compareSelectA" class="compare-select"></select>
+
+                    <div class="compare-frame" id="compareFrameA"></div>
+
+                    <button class="preview-button compare-pick" data-slot="A">
+                        Use this style
+                    </button>
+
+                </div>
+
+                <div class="compare-column">
+
+                    <select id="compareSelectB" class="compare-select"></select>
+
+                    <div class="compare-frame" id="compareFrameB"></div>
+
+                    <button class="preview-button compare-pick" data-slot="B">
+                        Use this style
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         TEXT COLOR TOOLBAR
+         (appears when text is selected
+         inside the live preview)
+    ========================== -->
+
+    <div
+        id="textColorToolbar"
+        class="text-color-toolbar hidden"
+        role="toolbar"
+        aria-label="Text color"
+    >
+
+        <div class="tct-swatches">
+
+            <button class="tct-swatch" data-color="var(--primary)" style="background:var(--primary)" title="Brand primary"></button>
+            <button class="tct-swatch" data-color="var(--secondary)" style="background:var(--secondary)" title="Brand secondary"></button>
+            <button class="tct-swatch" data-color="#0F172A" style="background:#0F172A" title="Slate"></button>
+            <button class="tct-swatch" data-color="#DC2626" style="background:#DC2626" title="Red"></button>
+            <button class="tct-swatch" data-color="#059669" style="background:#059669" title="Emerald"></button>
+            <button class="tct-swatch" data-color="#D97706" style="background:#D97706" title="Amber"></button>
+            <button class="tct-swatch" data-color="#FFFFFF" style="background:#FFFFFF" title="White"></button>
+
+        </div>
+
+        <label class="tct-custom" title="Custom color">
+            <input type="color" id="tctCustomColor">
+        </label>
+
+        <button id="tctClear" class="tct-clear" title="Remove color" type="button">⟲</button>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
