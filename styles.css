@@ -859,6 +859,60 @@ button {
 }
 
 
+.industry-filter {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    padding: 0 4px 14px;
+
+}
+
+
+.industry-chip {
+
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    border: 1px solid var(--chrome-border);
+
+    background: transparent;
+
+    color: var(--chrome-muted);
+
+    font-size: 10.5px;
+
+    font-weight: 650;
+
+    white-space: nowrap;
+
+}
+
+
+.industry-chip:hover {
+
+    background: rgba(255, 255, 255, .04);
+
+    color: var(--chrome-text);
+
+}
+
+
+.industry-chip.active {
+
+    background: var(--chrome-accent-bg);
+
+    border-color: rgba(124, 92, 255, .3);
+
+    color: var(--chrome-accent-text);
+
+}
+
+
 .style-list {
 
     display: grid;
@@ -1824,6 +1878,34 @@ button {
 }
 
 
+.contrast-warning {
+
+    margin: 14px 0 0;
+
+    padding: 10px 12px;
+
+    border-radius: 8px;
+
+    font-size: 11.5px;
+
+    line-height: 1.5;
+
+    background: rgba(217, 119, 6, .12);
+
+    border: 1px solid rgba(217, 119, 6, .3);
+
+    color: #FBBF24;
+
+}
+
+
+.contrast-warning.hidden {
+
+    display: none;
+
+}
+
+
 .presets {
 
     display: flex;
@@ -2062,7 +2144,9 @@ button {
 
     margin: 0;
 
-    font-size: 34px;
+    font-size: clamp(24px, 7vw, 34px);
+
+    overflow-wrap: anywhere;
 
     color: var(--chrome-text);
 
@@ -2626,6 +2710,19 @@ button {
 }
 
 
+.preview.futuristic .preview-hero {
+
+    /* the tech-decor lines/hexagon are sized to
+       bleed past the hero on purpose for the
+       other styles that use hero-decor, but for
+       this one they were reaching down far enough
+       to cross the cards below and cut through
+       their text - clip it to the hero itself */
+    overflow: hidden;
+
+}
+
+
 .mini-label {
 
     display: block;
@@ -2693,6 +2790,24 @@ button {
 }
 
 
+/* on dark panels, a dark chosen primary color
+   (e.g. the "Corporate" preset) can make these
+   bars disappear entirely - lighten them so
+   they always stay visible against a dark
+   surface regardless of which primary is
+   picked */
+
+.preview.dark .chart i,
+.preview.futuristic .chart i,
+.preview.cinematic .chart i {
+
+    background: color-mix(in srgb, var(--primary) 55%, white);
+
+    opacity: .9;
+
+}
+
+
 .chart i:nth-child(1) { transition-delay: .02s; }
 .chart i:nth-child(2) { transition-delay: .08s; }
 .chart i:nth-child(3) { transition-delay: .14s; }
@@ -2731,8 +2846,8 @@ button {
     background: var(--surface);
 
     transition:
-        transform .25s ease,
-        box-shadow .25s ease,
+        transform .35s cubic-bezier(.16, 1, .3, 1),
+        box-shadow .35s cubic-bezier(.16, 1, .3, 1),
         border-color .25s ease;
 
 }
@@ -2740,7 +2855,7 @@ button {
 
 .preview-card:hover {
 
-    transform: translateY(-4px);
+    transform: translateY(-5px);
 
     box-shadow: var(--shadow);
 
@@ -2911,56 +3026,31 @@ button {
 
 .preview.glassmorphism {
 
-    background:
+    /* a light scrim keeps enough depth for text
+       to stay legible (backed up by the panels'
+       own text-shadows below), without smothering
+       the actual photo - the point of this style
+       is to see something real through the glass */
+    background-image:
+        linear-gradient(
+            rgba(8, 10, 20, .12),
+            rgba(8, 10, 20, .32)
+        ),
         linear-gradient(
             135deg,
-            var(--primary),
-            var(--secondary)
+            color-mix(in srgb, var(--primary) 25%, transparent),
+            color-mix(in srgb, var(--secondary) 25%, transparent)
+        ),
+        var(
+            --img-glassmorphism-hero,
+            linear-gradient(135deg, var(--primary), var(--secondary))
         );
 
+    background-size: cover;
+
+    background-position: center;
+
     position: relative;
-
-}
-
-
-.preview.glassmorphism::before,
-.preview.glassmorphism::after {
-
-    content: "";
-
-    position: absolute;
-
-    width: 320px;
-
-    height: 320px;
-
-    border-radius: 50%;
-
-    background: rgba(255, 255, 255, .18);
-
-    filter: blur(60px);
-
-    pointer-events: none;
-
-}
-
-
-.preview.glassmorphism::before {
-
-    top: -80px;
-
-    left: 10%;
-
-}
-
-
-.preview.glassmorphism::after {
-
-    bottom: -100px;
-
-    right: 5%;
-
-    background: rgba(255, 255, 255, .12);
 
 }
 
@@ -2975,20 +3065,62 @@ button {
 .visual-card {
 
     background:
-        rgba(255,255,255,.16);
+        rgba(255,255,255,.22);
 
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px) saturate(160%);
 
-    -webkit-backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
 
-    border-color:
-        rgba(255,255,255,.3);
+    border: 1.5px solid rgba(255,255,255,.5);
 
     color: white;
 
+    text-shadow: 0 1px 6px rgba(0, 0, 0, .3);
+
     position: relative;
 
+    overflow: hidden;
+
     z-index: 1;
+
+}
+
+
+.preview.glassmorphism .preview-card,
+.preview.glassmorphism .visual-card,
+.preview.glassmorphism .preview-form {
+
+    /* a real drop shadow gives the panel actual
+       lift above the blurred backdrop - without
+       this, the panel and background were both
+       so translucent that nothing read as being
+       "in front of" anything else */
+    box-shadow:
+        0 24px 48px -16px rgba(0, 0, 0, .45),
+        inset 0 1px 0 rgba(255, 255, 255, .5);
+
+}
+
+
+.preview.glassmorphism .preview-card::before,
+.preview.glassmorphism .visual-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            120deg,
+            rgba(255, 255, 255, .45) 0%,
+            transparent 30%,
+            transparent 70%,
+            rgba(255, 255, 255, .12) 100%
+        );
+
+    pointer-events: none;
 
 }
 
@@ -2996,7 +3128,11 @@ button {
 .preview.glassmorphism
 .preview-card:hover {
 
-    background: rgba(255,255,255,.24);
+    background: rgba(255,255,255,.3);
+
+    box-shadow:
+        0 32px 60px -16px rgba(0, 0, 0, .5),
+        inset 0 1px 0 rgba(255, 255, 255, .5);
 
 }
 
@@ -3007,6 +3143,46 @@ button {
 .preview-hero p {
 
     color: rgba(255,255,255,.75);
+
+    text-shadow: 0 1px 8px rgba(0, 0, 0, .45);
+
+}
+
+
+/* the hero heading/badge sit directly on the
+   tinted backdrop (not inside a glass panel),
+   so - unlike card text - they can't rely on
+   the panel's own scrim for contrast. Force
+   them light regardless of the chosen primary/
+   secondary colors. */
+
+.preview.glassmorphism .hero-copy h2 {
+
+    color: white;
+
+    text-shadow: 0 2px 14px rgba(0, 0, 0, .4);
+
+}
+
+
+.preview.glassmorphism .preview-badge {
+
+    background: rgba(255, 255, 255, .16);
+
+    backdrop-filter: blur(16px);
+
+    -webkit-backdrop-filter: blur(16px);
+
+    color: white;
+
+    border: 1px solid rgba(255, 255, 255, .3);
+
+}
+
+
+.preview.glassmorphism .positive {
+
+    color: color-mix(in srgb, var(--primary) 45%, white);
 
 }
 
@@ -3022,11 +3198,17 @@ button {
 
 .preview.glassmorphism .preview-secondary {
 
-    background: rgba(255,255,255,.14);
+    background: rgba(255,255,255,.16);
 
     color: white;
 
+    text-shadow: 0 1px 6px rgba(0, 0, 0, .35);
+
     border-color: rgba(255,255,255,.35);
+
+    backdrop-filter: blur(20px) saturate(140%);
+
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
 
 }
 
@@ -3094,6 +3276,32 @@ button {
     box-shadow:
         5px 5px 12px
         color-mix(in srgb, var(--primary) 30%, #cbd0d8);
+
+}
+
+
+.preview.neumorphism .preview-button:active,
+.preview.neumorphism .preview-secondary:active {
+
+    box-shadow:
+        inset 4px 4px 10px
+        color-mix(in srgb, var(--primary) 30%, #9aa1ad),
+        inset -4px -4px 10px #ffffff;
+
+    transform: translateY(0);
+
+}
+
+
+.preview.neumorphism .preview-secondary {
+
+    box-shadow:
+        5px 5px 12px
+        color-mix(in srgb, var(--primary) 10%, #cbd0d8),
+        -5px -5px 12px
+        #ffffff;
+
+    border: none;
 
 }
 
@@ -3170,6 +3378,19 @@ button {
     height: 46px;
 
     border-radius: 14px;
+
+    box-shadow:
+        0 8px 18px -6px
+        color-mix(in srgb, var(--primary) 60%, transparent);
+
+}
+
+
+.preview.bento .preview-card:nth-child(1):hover {
+
+    box-shadow:
+        0 20px 40px -16px
+        color-mix(in srgb, var(--primary) 45%, transparent);
 
 }
 
@@ -3256,9 +3477,9 @@ button {
 
 .preview.flat .preview-secondary {
 
-    background: color-mix(in srgb, var(--secondary) 12%, transparent);
+    background: color-mix(in srgb, var(--secondary) 15%, transparent);
 
-    color: var(--secondary);
+    color: color-mix(in srgb, var(--secondary) 70%, black);
 
     border: none;
 
@@ -3316,6 +3537,26 @@ button {
 }
 
 
+/* a dark chosen primary (e.g. "Corporate")
+   would otherwise make the badge and growth
+   figure invisible against this dark surface */
+
+.preview.dark .preview-badge {
+
+    background: color-mix(in srgb, var(--primary) 20%, transparent);
+
+    color: color-mix(in srgb, var(--primary) 40%, white);
+
+}
+
+
+.preview.dark .positive {
+
+    color: color-mix(in srgb, var(--primary) 45%, white);
+
+}
+
+
 .preview.dark .preview-card:hover {
 
     border-color: color-mix(in srgb, var(--primary) 50%, #263244);
@@ -3337,11 +3578,29 @@ button {
 }
 
 
+.preview.dark .card-icon {
+
+    box-shadow:
+        0 0 18px -4px
+        color-mix(in srgb, var(--primary) 70%, transparent);
+
+}
+
+
 .preview.dark .preview-button {
 
     box-shadow:
         0 0 24px -4px
         color-mix(in srgb, var(--primary) 80%, transparent);
+
+}
+
+
+.preview.dark .preview-button:hover {
+
+    box-shadow:
+        0 0 32px -6px
+        color-mix(in srgb, var(--primary) 90%, transparent);
 
 }
 
@@ -3369,13 +3628,17 @@ button {
 
 .preview.aurora {
 
+    /* kept light enough that a real hero photo
+       stays clearly visible underneath - these
+       used to be strong enough to nearly wash
+       it out entirely */
     background:
 
         radial-gradient(
             circle at 20% 20%,
             color-mix(
                 in srgb,
-                var(--primary) 40%,
+                var(--primary) 22%,
                 transparent
             ),
             transparent 38%
@@ -3385,7 +3648,7 @@ button {
             circle at 80% 15%,
             color-mix(
                 in srgb,
-                var(--secondary) 40%,
+                var(--secondary) 22%,
                 transparent
             ),
             transparent 38%
@@ -3395,15 +3658,17 @@ button {
             circle at 50% 90%,
             color-mix(
                 in srgb,
-                var(--primary) 25%,
+                var(--primary) 14%,
                 transparent
             ),
             transparent 40%
         ),
 
-        var(--background);
+        var(--img-aurora-hero, var(--background));
 
-    background-size: 200% 200%;
+    background-size: 200% 200%, 200% 200%, 200% 200%, cover;
+
+    background-position: 0 0, 0 0, 0 0, center;
 
     animation: auroraShift 16s ease-in-out infinite;
 
@@ -3413,6 +3678,23 @@ button {
 @keyframes auroraShift {
     0%, 100% { background-position: 0% 0%, 100% 0%, 50% 100%, 0 0; }
     50% { background-position: 15% 15%, 85% 20%, 45% 85%, 0 0; }
+}
+
+
+.preview.aurora .hero-copy {
+
+    background: rgba(255, 255, 255, .38);
+
+    backdrop-filter: blur(20px) saturate(140%);
+
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+
+    border-radius: 24px;
+
+    padding: 28px;
+
+    margin: -28px;
+
 }
 
 
@@ -3427,9 +3709,9 @@ button {
 
     background: rgba(255,255,255,.5);
 
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(22px) saturate(150%);
 
-    -webkit-backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(22px) saturate(150%);
 
     border-color: rgba(255,255,255,.6);
 
@@ -3464,8 +3746,24 @@ button {
         linear-gradient(
             135deg,
             var(--primary),
-            var(--secondary)
+            var(--secondary),
+            var(--primary)
         );
+
+    background-size: 200% auto;
+
+    transition:
+        background-position .5s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+.preview.gradient
+.preview-button:hover {
+
+    background-position: 100% center;
 
 }
 
@@ -3574,6 +3872,25 @@ button {
 }
 
 
+.preview.claymorphism .preview-button,
+.preview.claymorphism .preview-secondary {
+
+    transition:
+        transform .15s cubic-bezier(.34, 1.56, .64, 1),
+        filter .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+.preview.claymorphism .preview-button:active,
+.preview.claymorphism .preview-secondary:active {
+
+    transform: scale(.93);
+
+}
+
+
 /* ---------- NEOBRUTALISM ---------- */
 
 .preview.neobrutalism {
@@ -3609,7 +3926,7 @@ button {
 
     transform: translate(-3px, -3px);
 
-    box-shadow: 9px 9px 0 var(--text);
+    box-shadow: 9px 9px 0 var(--primary);
 
 }
 
@@ -3641,7 +3958,7 @@ button {
 
     border-radius: 999px;
 
-    background: var(--secondary);
+    background: color-mix(in srgb, var(--secondary) 70%, black);
 
     color: white;
 
@@ -3744,7 +4061,7 @@ button {
 
 .preview.organic {
 
-    background:
+    background-image:
 
         radial-gradient(
             circle at 15% 85%,
@@ -3752,7 +4069,17 @@ button {
             transparent 45%
         ),
 
-        var(--background);
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--background) 15%, transparent),
+            color-mix(in srgb, var(--background) 30%, transparent)
+        ),
+
+        var(--img-organic-hero, var(--background));
+
+    background-size: auto, auto, cover;
+
+    background-position: center, center, center;
 
 }
 
@@ -3882,6 +4209,48 @@ button {
 }
 
 
+.preview.editorial .visual-card {
+
+    position: relative;
+
+    overflow: hidden;
+
+    background-image:
+        linear-gradient(
+            color-mix(in srgb, var(--primary) 70%, transparent),
+            color-mix(in srgb, var(--primary) 70%, transparent)
+        ),
+        var(--img-editorial-hero, none);
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-blend-mode: luminosity;
+
+}
+
+
+.preview.editorial .visual-card * {
+
+    position: relative;
+
+    z-index: 1;
+
+}
+
+
+.preview.editorial .visual-card .mini-label,
+.preview.editorial .visual-card strong,
+.preview.editorial .visual-card .positive {
+
+    color: white;
+
+    text-shadow: 0 1px 8px rgba(0, 0, 0, .35);
+
+}
+
+
 .preview.editorial .card-icon {
 
     border-radius: 0;
@@ -3895,7 +4264,7 @@ button {
 
 .preview.futuristic {
 
-    background: #080B14;
+    background-color: #080B14;
 
     color: white;
 
@@ -3908,9 +4277,12 @@ button {
             90deg,
             color-mix(in srgb, var(--primary) 8%, transparent) 1px,
             transparent 1px
-        );
+        ),
+        var(--img-futuristic-hero, none);
 
-    background-size: 34px 34px;
+    background-size: 34px 34px, 34px 34px, cover;
+
+    background-position: 0 0, 0 0, center;
 
 }
 
@@ -3958,6 +4330,28 @@ button {
 }
 
 
+/* a dark chosen primary (e.g. "Corporate")
+   would otherwise make the badge and growth
+   figure invisible against this dark surface */
+
+.preview.futuristic .preview-badge {
+
+    background: color-mix(in srgb, var(--primary) 20%, transparent);
+
+    color: color-mix(in srgb, var(--primary) 45%, white);
+
+    border: 1px solid color-mix(in srgb, var(--primary) 50%, transparent);
+
+}
+
+
+.preview.futuristic .positive {
+
+    color: color-mix(in srgb, var(--primary) 45%, white);
+
+}
+
+
 .preview.futuristic .preview-button {
 
     box-shadow:
@@ -3990,6 +4384,800 @@ button {
     box-shadow:
         0 0 18px -2px
         color-mix(in srgb, var(--primary) 90%, transparent);
+
+}
+
+
+/* ---------- 3D DEPTH UI ---------- */
+
+.preview.depth3d .preview-grid {
+
+    perspective: 1400px;
+
+}
+
+
+.preview.depth3d .preview-card {
+
+    transform: rotateY(-4deg) rotateX(2deg);
+
+    transform-style: preserve-3d;
+
+    border: none;
+
+    box-shadow:
+        18px 22px 40px -14px rgba(15, 23, 42, .4),
+        0 2px 0 color-mix(in srgb, var(--primary) 30%, transparent);
+
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease;
+
+}
+
+
+.preview.depth3d .preview-card:hover {
+
+    transform:
+        rotateY(0deg) rotateX(0deg)
+        translateY(-6px) scale(1.02);
+
+    box-shadow:
+        10px 30px 50px -12px rgba(15, 23, 42, .45);
+
+}
+
+
+.preview.depth3d .hero-visual {
+
+    perspective: 1400px;
+
+}
+
+
+.preview.depth3d .visual-card {
+
+    transform: rotateY(-8deg) rotateX(4deg);
+
+    box-shadow:
+        24px 30px 50px -16px rgba(15, 23, 42, .4);
+
+}
+
+
+.preview.depth3d .card-icon {
+
+    box-shadow:
+        0 8px 16px -4px
+        color-mix(in srgb, var(--primary) 60%, transparent);
+
+}
+
+
+/* ---------- LIQUID GLASS ---------- */
+
+.preview.liquidglass {
+
+    /* same light scrim as Glassmorphism - see
+       notes there. The photo should stay visible,
+       not get smothered by the tint. */
+    background-image:
+        linear-gradient(
+            rgba(8, 10, 20, .12),
+            rgba(8, 10, 20, .32)
+        ),
+        linear-gradient(
+            160deg,
+            color-mix(in srgb, var(--primary) 25%, transparent),
+            color-mix(in srgb, var(--secondary) 25%, transparent)
+        ),
+        var(
+            --img-liquidglass-hero,
+            linear-gradient(160deg, var(--primary), var(--secondary))
+        );
+
+    background-size: cover;
+
+    background-position: center;
+
+}
+
+
+.preview.liquidglass
+.preview-navbar,
+.preview.liquidglass
+.preview-card,
+.preview.liquidglass
+.preview-form,
+.preview.liquidglass
+.visual-card {
+
+    background: rgba(255, 255, 255, .18);
+
+    backdrop-filter: blur(24px) saturate(170%);
+
+    -webkit-backdrop-filter: blur(24px) saturate(170%);
+
+    border: 1.5px solid rgba(255, 255, 255, .5);
+
+    position: relative;
+
+    overflow: hidden;
+
+    color: white;
+
+    text-shadow: 0 1px 6px rgba(0, 0, 0, .3);
+
+}
+
+
+.preview.liquidglass .preview-card,
+.preview.liquidglass .visual-card,
+.preview.liquidglass .preview-form {
+
+    box-shadow:
+        0 24px 48px -16px rgba(0, 0, 0, .45),
+        inset 0 1px 0 rgba(255, 255, 255, .55);
+
+}
+
+
+.preview.liquidglass .preview-card::before,
+.preview.liquidglass .visual-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            120deg,
+            rgba(255, 255, 255, .5) 0%,
+            transparent 30%,
+            transparent 70%,
+            rgba(255, 255, 255, .15) 100%
+        );
+
+    pointer-events: none;
+
+}
+
+
+.preview.liquidglass .preview-card:hover {
+
+    background: rgba(255, 255, 255, .28);
+
+    box-shadow:
+        0 32px 60px -16px rgba(0, 0, 0, .5),
+        inset 0 1px 0 rgba(255, 255, 255, .55);
+
+}
+
+
+.preview.liquidglass .preview-button {
+
+    background: rgba(255, 255, 255, .95);
+
+    color: var(--primary);
+
+}
+
+
+.preview.liquidglass .preview-secondary {
+
+    background: rgba(255, 255, 255, .16);
+
+    color: white;
+
+    text-shadow: 0 1px 6px rgba(0, 0, 0, .35);
+
+    border-color: rgba(255, 255, 255, .4);
+
+    backdrop-filter: blur(20px) saturate(140%);
+
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+
+}
+
+
+.preview.liquidglass .preview-card p,
+.preview.liquidglass .preview-hero p,
+.preview.liquidglass .preview-navlinks,
+.preview.liquidglass .mini-label {
+
+    color: rgba(255, 255, 255, .8);
+
+    text-shadow: 0 1px 8px rgba(0, 0, 0, .45);
+
+}
+
+
+/* the hero heading/badge/growth-indicator sit
+   directly on the tinted backdrop, not inside
+   a glass panel - force them light regardless
+   of the chosen primary/secondary colors */
+
+.preview.liquidglass .hero-copy h2 {
+
+    color: white;
+
+    text-shadow: 0 2px 14px rgba(0, 0, 0, .4);
+
+}
+
+
+.preview.liquidglass .preview-badge {
+
+    background: rgba(255, 255, 255, .16);
+
+    backdrop-filter: blur(16px);
+
+    -webkit-backdrop-filter: blur(16px);
+
+    color: white;
+
+    border: 1px solid rgba(255, 255, 255, .3);
+
+}
+
+
+.preview.liquidglass .positive {
+
+    color: color-mix(in srgb, var(--primary) 45%, white);
+
+}
+
+
+/* ---------- GRAINY GRADIENT ---------- */
+
+.preview.grainy {
+
+    background:
+
+        radial-gradient(
+            circle at 20% 20%,
+            color-mix(in srgb, var(--primary) 35%, transparent),
+            transparent 40%
+        ),
+
+        radial-gradient(
+            circle at 80% 30%,
+            color-mix(in srgb, var(--secondary) 30%, transparent),
+            transparent 45%
+        ),
+
+        radial-gradient(
+            circle at 50% 90%,
+            color-mix(in srgb, var(--primary) 20%, transparent),
+            transparent 45%
+        ),
+
+        var(--background);
+
+    position: relative;
+
+}
+
+
+.preview.grainy::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 0;
+
+    pointer-events: none;
+
+    opacity: .35;
+
+    mix-blend-mode: overlay;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+}
+
+
+/* without this, the noise texture above (an
+   absolutely-positioned pseudo-element) paints
+   over the real content instead of staying
+   behind it, since positioned elements paint
+   above static ones regardless of DOM order */
+
+.preview.grainy > * {
+
+    position: relative;
+
+    z-index: 1;
+
+}
+
+
+.preview.grainy .preview-card,
+.preview.grainy .preview-form,
+.preview.grainy .visual-card {
+
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+
+    backdrop-filter: blur(6px);
+
+    -webkit-backdrop-filter: blur(6px);
+
+}
+
+
+/* ---------- Y2K / RETRO FUTURISM ---------- */
+
+.preview.y2k {
+
+    background:
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--primary) 15%, var(--background)),
+            color-mix(in srgb, var(--secondary) 15%, var(--background))
+        );
+
+}
+
+
+.preview.y2k .preview-card,
+.preview.y2k .visual-card,
+.preview.y2k .preview-form {
+
+    border-radius: 28px;
+
+    border: 3px solid color-mix(in srgb, var(--primary) 40%, transparent);
+
+    box-shadow:
+        0 12px 0 -4px rgba(255, 255, 255, .5) inset,
+        0 10px 24px -8px color-mix(in srgb, var(--primary) 50%, transparent);
+
+}
+
+
+.preview.y2k .preview-button,
+.preview.y2k .preview-secondary {
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, white 35%, var(--primary)),
+            var(--primary)
+        );
+
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, .6),
+        0 8px 16px -4px color-mix(in srgb, var(--primary) 60%, transparent);
+
+    font-weight: 800;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+.preview.y2k .preview-button:hover {
+
+    transform: translateY(-3px) scale(1.03);
+
+}
+
+
+.preview.y2k .card-icon {
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, white 40%, var(--secondary)),
+            var(--secondary)
+        );
+
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, .7);
+
+}
+
+
+.preview.y2k .preview-badge {
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--primary),
+            var(--secondary)
+        );
+
+    color: white;
+
+    font-weight: 800;
+
+}
+
+
+/* ---------- CINEMATIC EDITORIAL ---------- */
+
+.preview.cinematic {
+
+    background: #0B0C10;
+
+    color: white;
+
+}
+
+
+.preview.cinematic .preview-navbar {
+
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+
+}
+
+
+.preview.cinematic .preview-hero {
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    padding: 40px;
+
+}
+
+
+.preview.cinematic .preview-hero::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 0;
+
+    background-image:
+        linear-gradient(
+            180deg,
+            rgba(5, 6, 10, .2),
+            rgba(5, 6, 10, .92)
+        ),
+        var(
+            --img-cinematic-hero,
+            linear-gradient(
+                160deg,
+                color-mix(in srgb, var(--primary) 55%, #05060a),
+                color-mix(in srgb, var(--secondary) 45%, #05060a)
+            )
+        );
+
+    background-size: cover;
+
+    background-position: center;
+
+}
+
+
+.preview.cinematic .hero-copy,
+.preview.cinematic .hero-visual {
+
+    position: relative;
+
+    z-index: 1;
+
+}
+
+
+.preview.cinematic .hero-copy h2 {
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    letter-spacing: -.01em;
+
+}
+
+
+.preview.cinematic .preview-badge {
+
+    background: none;
+
+    border: 1px solid color-mix(in srgb, var(--primary) 60%, white);
+
+    color: color-mix(in srgb, var(--primary) 40%, white);
+
+}
+
+
+.preview.cinematic .preview-card,
+.preview.cinematic .preview-form,
+.preview.cinematic .visual-card {
+
+    background: rgba(255, 255, 255, .04);
+
+    border: 1px solid rgba(255, 255, 255, .12);
+
+    color: white;
+
+}
+
+
+.preview.cinematic .preview-card p,
+.preview.cinematic .preview-hero p,
+.preview.cinematic .mini-label,
+.preview.cinematic .preview-navlinks {
+
+    color: rgba(255, 255, 255, .65);
+
+}
+
+
+.preview.cinematic .preview-button {
+
+    background: color-mix(in srgb, var(--primary) 85%, white 10%);
+
+}
+
+
+.preview.cinematic .positive {
+
+    color: color-mix(in srgb, var(--primary) 45%, white);
+
+}
+
+
+/* ---------- ILLUSTRATED PRODUCT UI ---------- */
+
+.preview.illustrated {
+
+    background: color-mix(in srgb, var(--primary) 4%, var(--background));
+
+}
+
+
+.preview.illustrated .preview-card {
+
+    border: none;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    position: relative;
+
+    padding-top: 100px;
+
+}
+
+
+.preview.illustrated .preview-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    right: 0;
+
+    height: 90px;
+
+    background-size: cover;
+
+    background-position: center;
+
+    opacity: .92;
+
+}
+
+
+.preview.illustrated .preview-card:nth-child(1)::before {
+
+    background-image:
+        var(
+            --img-illustrated-card1,
+            linear-gradient(135deg, var(--primary), var(--secondary))
+        );
+
+}
+
+
+.preview.illustrated .preview-card:nth-child(2)::before {
+
+    background-image:
+        var(
+            --img-illustrated-card2,
+            linear-gradient(135deg, var(--secondary), var(--primary))
+        );
+
+}
+
+
+.preview.illustrated .preview-card:nth-child(3)::before {
+
+    background-image:
+        var(
+            --img-illustrated-card3,
+            linear-gradient(
+                135deg,
+                var(--primary),
+                color-mix(in srgb, var(--secondary) 60%, white)
+            )
+        );
+
+}
+
+
+.preview.illustrated .card-icon {
+
+    position: relative;
+
+    z-index: 1;
+
+    box-shadow: 0 6px 16px -4px rgba(15, 23, 42, .2);
+
+}
+
+
+.preview.illustrated .preview-button,
+.preview.illustrated .preview-secondary {
+
+    border-radius: 14px;
+
+}
+
+
+/* ---------- SCRAPBOOK COLLAGE ---------- */
+
+.preview.scrapbook {
+
+    background: color-mix(in srgb, var(--secondary) 5%, var(--background));
+
+}
+
+
+.preview.scrapbook .preview-grid {
+
+    gap: 28px;
+
+}
+
+
+.preview.scrapbook .preview-card {
+
+    border: 8px solid var(--surface);
+
+    border-radius: 4px;
+
+    box-shadow: 0 14px 30px -10px rgba(0, 0, 0, .25);
+
+    position: relative;
+
+    overflow: hidden;
+
+    min-height: 220px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: flex-end;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+
+}
+
+
+.preview.scrapbook .preview-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 0;
+
+    background-size: cover;
+
+    background-position: center;
+
+}
+
+
+.preview.scrapbook .preview-card:nth-child(1)::before {
+
+    background-image:
+        linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, .75)),
+        var(
+            --img-scrapbook-card1,
+            linear-gradient(135deg, var(--primary), var(--secondary))
+        );
+
+}
+
+
+.preview.scrapbook .preview-card:nth-child(2)::before {
+
+    background-image:
+        linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, .75)),
+        var(
+            --img-scrapbook-card2,
+            linear-gradient(135deg, var(--secondary), var(--primary))
+        );
+
+}
+
+
+.preview.scrapbook .preview-card:nth-child(3)::before {
+
+    background-image:
+        linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, .75)),
+        var(
+            --img-scrapbook-card3,
+            linear-gradient(
+                135deg,
+                var(--primary),
+                color-mix(in srgb, var(--secondary) 50%, white)
+            )
+        );
+
+}
+
+
+.preview.scrapbook .preview-card:nth-child(odd) {
+
+    transform: rotate(-2deg);
+
+}
+
+
+.preview.scrapbook .preview-card:nth-child(even) {
+
+    transform: rotate(2deg);
+
+}
+
+
+.preview.scrapbook .preview-card:hover {
+
+    transform: rotate(0deg) scale(1.02);
+
+}
+
+
+.preview.scrapbook .card-icon,
+.preview.scrapbook .preview-card h3,
+.preview.scrapbook .preview-card p {
+
+    position: relative;
+
+    z-index: 1;
+
+    color: white;
+
+}
+
+
+.preview.scrapbook .card-icon {
+
+    background: rgba(255, 255, 255, .25);
+
+    backdrop-filter: blur(4px);
+
+    -webkit-backdrop-filter: blur(4px);
 
 }
 
@@ -4205,6 +5393,59 @@ button {
 }
 
 
+.decision-cta {
+
+    position: relative;
+
+    z-index: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 10px;
+
+    flex-shrink: 0;
+
+}
+
+
+.response-time-note {
+
+    margin: 0;
+
+    font-size: 12.5px;
+
+    font-weight: 650;
+
+    color: var(--chrome-accent-text);
+
+    text-align: right;
+
+}
+
+
+@media (max-width: 800px) {
+
+    .decision-cta {
+
+        align-items: flex-start;
+
+        width: 100%;
+
+    }
+
+    .response-time-note {
+
+        text-align: left;
+
+    }
+
+}
+
+
 /* =========================================
    MODAL
 ========================================= */
@@ -4376,6 +5617,113 @@ button {
         flex-direction: column;
 
     }
+
+}
+
+
+.submit-status {
+
+    margin: 14px 0 0;
+
+    padding: 12px 14px;
+
+    border-radius: 10px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    background: rgba(255, 255, 255, .04);
+
+    border: 1px solid var(--chrome-border);
+
+    color: var(--chrome-muted);
+
+}
+
+
+.submit-status.hidden,
+.book-call-link.hidden,
+.response-time-note.hidden {
+
+    display: none;
+
+}
+
+
+.submit-status.status-success {
+
+    background: rgba(52, 211, 153, .1);
+
+    border-color: rgba(52, 211, 153, .3);
+
+    color: #6EE7B7;
+
+}
+
+
+.submit-status.status-error {
+
+    background: rgba(248, 113, 113, .1);
+
+    border-color: rgba(248, 113, 113, .3);
+
+    color: #FCA5A5;
+
+}
+
+
+.share-link-btn {
+
+    display: block;
+
+    width: 100%;
+
+    margin-top: 10px;
+
+    text-align: center;
+
+    padding: 10px;
+
+    border-radius: 8px;
+
+    border: 1px dashed var(--chrome-border-strong);
+
+}
+
+
+.book-call-link {
+
+    display: block;
+
+    margin-top: 14px;
+
+    padding: 12px 14px;
+
+    border-radius: 10px;
+
+    text-align: center;
+
+    font-weight: 700;
+
+    font-size: 13.5px;
+
+    text-decoration: none;
+
+    color: var(--chrome-accent-text);
+
+    background: var(--chrome-accent-bg);
+
+    border: 1px solid rgba(124, 92, 255, .3);
+
+    transition: background .18s ease;
+
+}
+
+
+.book-call-link:hover {
+
+    background: rgba(124, 92, 255, .24);
 
 }
 
@@ -4654,6 +6002,94 @@ button {
 /* =========================================
    PREVIEW TIPS
 ========================================= */
+
+.resume-banner {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 14px;
+
+    padding: 14px 18px;
+
+    margin-bottom: 20px;
+
+    border-radius: 12px;
+
+    background: var(--chrome-accent-bg);
+
+    border: 1px solid rgba(124, 92, 255, .3);
+
+    color: var(--chrome-accent-text);
+
+    font-size: 13.5px;
+
+    font-weight: 600;
+
+}
+
+
+.resume-banner.hidden {
+
+    display: none;
+
+}
+
+
+.resume-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    flex-shrink: 0;
+
+}
+
+
+.resume-dismiss {
+
+    border: none;
+
+    background: none;
+
+    color: var(--chrome-accent-text);
+
+    font-size: 18px;
+
+    line-height: 1;
+
+    padding: 4px 8px;
+
+    opacity: .7;
+
+}
+
+
+.resume-dismiss:hover {
+
+    opacity: 1;
+
+}
+
+
+@media (max-width: 620px) {
+
+    .resume-banner {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+    }
+
+}
+
 
 .preview-tips {
 
@@ -5451,6 +6887,48 @@ button {
     .intro-stats {
 
         gap: 20px;
+
+    }
+
+    .style-information {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 12px;
+
+    }
+
+    .style-tags {
+
+        max-width: 100%;
+
+    }
+
+}
+
+
+@media (max-width: 360px) {
+
+    .brand p {
+
+        display: none;
+
+    }
+
+    .top-actions {
+
+        gap: 6px;
+
+    }
+
+    .secondary-btn,
+    .primary-btn {
+
+        padding: 8px 9px;
+
+        font-size: 11.5px;
 
     }
 

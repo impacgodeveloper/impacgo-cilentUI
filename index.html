@@ -118,6 +118,21 @@
 
                 <div class="sidebar-panel active" data-panel="styles">
 
+                    <div class="industry-filter" id="industryFilter">
+
+                        <button class="industry-chip active" data-industry="all">All Styles</button>
+                        <button class="industry-chip" data-industry="saas-tech">SaaS &amp; Tech</button>
+                        <button class="industry-chip" data-industry="ecommerce">E-commerce</button>
+                        <button class="industry-chip" data-industry="startups-marketing">Startups &amp; Marketing</button>
+                        <button class="industry-chip" data-industry="corporate">Corporate</button>
+                        <button class="industry-chip" data-industry="creative-portfolio">Creative &amp; Portfolio</button>
+                        <button class="industry-chip" data-industry="mobile-apps">Mobile Apps</button>
+                        <button class="industry-chip" data-industry="ai-tech">AI &amp; Emerging Tech</button>
+                        <button class="industry-chip" data-industry="wellness">Wellness &amp; Lifestyle</button>
+                        <button class="industry-chip" data-industry="publishing">Publishing &amp; Content</button>
+
+                    </div>
+
                     <div id="styleList" class="style-list">
                         <!-- JavaScript inserts styles -->
                     </div>
@@ -254,6 +269,13 @@
 
                     </div>
 
+                    <p
+                        id="contrastWarning"
+                        class="contrast-warning hidden"
+                    >
+                        <!-- JS -->
+                    </p>
+
 
                     <!-- PRESET COLORS -->
 
@@ -387,8 +409,9 @@
                     </div>
 
                     <p class="font-hint">
-                        Drag any font below onto the live preview
-                        to see your product in that typeface.
+                        Tap (or drag) any font below to apply it
+                        to the live preview and see your product
+                        in that typeface.
                     </p>
 
                     <div class="font-palette">
@@ -475,8 +498,8 @@
                     </div>
 
                     <p class="elements-hint">
-                        Pick up any block below and drop it into the
-                        live preview to see how it looks in the
+                        Tap (or drag) any block below to add it to the
+                        live preview and see how it looks in the
                         selected UI style and brand colors.
                     </p>
 
@@ -517,10 +540,28 @@
 
         <section class="content">
 
+            <div id="resumeBanner" class="resume-banner hidden">
+
+                <span>👋 Welcome back — you have picks saved from last time.</span>
+
+                <div class="resume-actions">
+
+                    <button id="resumeBtn" class="text-btn">
+                        Resume where I left off
+                    </button>
+
+                    <button id="dismissResumeBtn" class="resume-dismiss" aria-label="Dismiss" type="button">
+                        ×
+                    </button>
+
+                </div>
+
+            </div>
+
             <div class="preview-tips">
 
                 <span class="tip-chip">
-                    🧩 Drag elements above into the preview below
+                    🧩 Tap or drag elements above into the preview below
                 </span>
 
                 <span class="tip-chip">
@@ -900,7 +941,7 @@
                     <span class="how-num">2</span>
                     <div>
                         <strong>Make it yours</strong>
-                        <p>Switch to the Colors, Fonts or Elements tabs to try your own brand colors, drag in a typeface, or drop extra sections into the preview.</p>
+                        <p>Switch to the Colors, Fonts or Elements tabs to try your own brand colors, tap in a typeface, or add extra sections to the preview.</p>
                     </div>
                 </div>
 
@@ -940,7 +981,7 @@
                     <div class="intro-stats load-in d-4">
 
                         <div class="intro-stat">
-                            <strong data-count="15">0</strong>
+                            <strong data-count="22">0</strong>
                             <span>UI styles</span>
                         </div>
 
@@ -1080,12 +1121,23 @@
 
                 </div>
 
-                <button
-                    id="selectStyle"
-                    class="large-select-btn"
-                >
-                    Select This Style
-                </button>
+                <div class="decision-cta">
+
+                    <button
+                        id="selectStyle"
+                        class="large-select-btn"
+                    >
+                        Select This Style
+                    </button>
+
+                    <p
+                        id="responseTimeNote"
+                        class="response-time-note hidden"
+                    >
+                        <!-- JS -->
+                    </p>
+
+                </div>
 
             </section>
 
@@ -1116,7 +1168,7 @@
                 CLIENT DESIGN SUMMARY
             </span>
 
-            <h2>
+            <h2 id="summaryHeading">
                 Selected Design Direction
             </h2>
 
@@ -1144,6 +1196,36 @@
                 </button>
 
             </div>
+
+            <button
+                id="shareLink"
+                class="text-btn share-link-btn"
+            >
+                🔗 Copy Shareable Link
+            </button>
+
+            <button
+                id="downloadTokens"
+                class="text-btn share-link-btn"
+            >
+                ⬇ Download Design Tokens
+            </button>
+
+            <p
+                id="submitStatus"
+                class="submit-status hidden"
+            >
+                <!-- JS -->
+            </p>
+
+            <a
+                id="bookCallLink"
+                class="book-call-link hidden"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <!-- JS -->
+            </a>
 
         </div>
 

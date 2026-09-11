@@ -8,6 +8,109 @@
    receive submissions */
 const SUBMIT_EMAIL = "bhushan@impacgo.com";
 
+/* optional: paste a form-submission endpoint
+   here (e.g. a free Formspree/Getform form
+   action URL) to have "Send to Agency" post
+   the selection directly and silently -
+   no dependency on the client's device having
+   a mail app configured. Leave this as an
+   empty string to fall back to opening the
+   client's email app instead (still works,
+   just requires them to hit send there). */
+const FORM_ENDPOINT = "";
+
+/* optional: your Calendly / Cal.com booking
+   link. When set, a "Book a call" option
+   appears in the selection summary so a
+   client can skip waiting on your reply and
+   grab time with you directly. Leave empty
+   to hide it. */
+const BOOKING_URL = "";
+
+/* optional: an honest turnaround promise
+   shown to the client before they submit,
+   e.g. "We reply within 4 business hours."
+   Leave empty to hide it - never fill this
+   in with something that isn't true. */
+const RESPONSE_TIME_PROMISE = "";
+
+/* optional: real photography/illustration for
+   the image-driven styles below (Cinematic
+   Editorial, Illustrated Product UI, Scrapbook
+   Collage). Paste a URL, or a relative path to
+   a file you've added to this project folder
+   (e.g. "images/hero-photo.jpg"), into any slot
+   below. Leave a slot empty to keep a tasteful
+   gradient placeholder there instead - nothing
+   breaks either way, so it's safe to fill these
+   in one at a time as you get real assets. */
+const STYLE_IMAGES = {
+
+    cinematic: {
+        hero: "images/cinematic-hero.jpg",
+    },
+
+    illustrated: {
+        card1: "images/illustrated-card1.jpg",
+        card2: "images/illustrated-card2.jpg",
+        card3: "images/illustrated-card3.jpg",
+    },
+
+    scrapbook: {
+        card1: "images/scrapbook-card1.jpg",
+        card2: "images/scrapbook-card2.jpg",
+        card3: "images/scrapbook-card3.jpg",
+    },
+
+    glassmorphism: {
+        hero: "images/glass-hero.jpg",
+    },
+
+    liquidglass: {
+        hero: "images/glass-hero.jpg",
+    },
+
+    aurora: {
+        hero: "images/aurora-hero.jpg",
+    },
+
+    organic: {
+        hero: "images/organic-hero.jpg",
+    },
+
+    editorial: {
+        hero: "images/editorial-hero.jpg",
+    },
+
+    futuristic: {
+        hero: "images/futuristic-hero.jpg",
+    },
+
+};
+
+function applyStyleImages() {
+
+    Object.entries(STYLE_IMAGES).forEach(([styleKey, slots]) => {
+
+        Object.entries(slots).forEach(([slot, url]) => {
+
+            if (!url) {
+
+                return;
+
+            }
+
+            document.documentElement.style.setProperty(
+                `--img-${styleKey}-${slot}`,
+                `url("${url}")`
+            );
+
+        });
+
+    });
+
+}
+
 
 /* =========================================
    CLIENT PERSONALIZATION
@@ -160,6 +263,148 @@ function applyClientPersonalization() {
 
 
 /* =========================================
+   OPTIONAL EXTRAS
+   (booking link + response-time promise -
+   both configured above, both stay hidden
+   unless you actually set them) ----------
+========================================= */
+
+function setupOptionalExtras() {
+
+    if (RESPONSE_TIME_PROMISE) {
+
+        const note =
+            document.getElementById("responseTimeNote");
+
+        note.textContent =
+            RESPONSE_TIME_PROMISE;
+
+        note.classList.remove("hidden");
+
+    }
+
+    if (BOOKING_URL) {
+
+        const bookLink =
+            document.getElementById("bookCallLink");
+
+        bookLink.href = BOOKING_URL;
+
+        bookLink.textContent =
+            "📅 Prefer to talk? Book a call";
+
+        bookLink.classList.remove("hidden");
+
+    }
+
+}
+
+
+/* =========================================
+   RESTORE SHARED STATE FROM URL
+   (the counterpart to "Copy Shareable Link" -
+   reads back the style/colors/font/blocks a
+   link was generated with, so nothing a
+   client picked is lost by closing the tab) -
+========================================= */
+
+function applyState(state) {
+
+    if (!state) {
+
+        return;
+
+    }
+
+    if (state.style && styles[state.style]) {
+
+        selectStyle(state.style);
+
+    }
+
+    let colorsChanged = false;
+
+    if (validHex(state.primary)) {
+
+        selectedColors.primary =
+            state.primary.toUpperCase();
+
+        colorsChanged = true;
+
+    }
+
+    if (validHex(state.secondary)) {
+
+        selectedColors.secondary =
+            state.secondary.toUpperCase();
+
+        colorsChanged = true;
+
+    }
+
+    if (validHex(state.background)) {
+
+        selectedColors.background =
+            state.background.toUpperCase();
+
+        colorsChanged = true;
+
+    }
+
+    if (colorsChanged) {
+
+        primaryColor.value = selectedColors.primary;
+        primaryHex.value = selectedColors.primary;
+
+        secondaryColor.value = selectedColors.secondary;
+        secondaryHex.value = selectedColors.secondary;
+
+        backgroundColor.value = selectedColors.background;
+        backgroundHex.value = selectedColors.background;
+
+        updateColors();
+
+    }
+
+    if (state.font) {
+
+        applyFont(state.font);
+
+    }
+
+    if (state.blocks && state.blocks.length) {
+
+        state.blocks.forEach(key => addElementBlock(key.trim()));
+
+    }
+
+}
+
+function restoreSharedState() {
+
+    applyState({
+
+        style: urlParams.get("style"),
+
+        primary: urlParams.get("primary"),
+
+        secondary: urlParams.get("secondary"),
+
+        background: urlParams.get("background"),
+
+        font: urlParams.get("font"),
+
+        blocks: (urlParams.get("blocks") || "")
+            .split(",")
+            .map(key => key.trim())
+            .filter(Boolean),
+
+    });
+
+}
+
+
+/* =========================================
    ICON SET
    (compact line icons, one per style)
 ========================================= */
@@ -209,7 +454,28 @@ const ICONS = {
         `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="5" y1="6" x2="19" y2="6" stroke-width="2.2"/><line x1="5" y1="11" x2="19" y2="11"/><line x1="5" y1="15" x2="14" y2="15"/></svg>`,
 
     futuristic:
-        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><circle cx="12" cy="12" r="2"/></svg>`
+        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><circle cx="12" cy="12" r="2"/></svg>`,
+
+    depth3d:
+        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5L12 12l8-4.5" opacity=".6"/><path d="M12 12v9" opacity=".6"/></svg>`,
+
+    liquidglass:
+        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3c4 5 6 8 6 11a6 6 0 1 1-12 0c0-3 2-6 6-11z"/></svg>`,
+
+    grainy:
+        `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="6" cy="7" r="1.2"/><circle cx="12" cy="5" r="1"/><circle cx="17" cy="8" r="1.3"/><circle cx="8" cy="13" r="1"/><circle cx="15" cy="14" r="1.2"/><circle cx="6" cy="18" r="1"/><circle cx="13" cy="18" r="1.3"/><circle cx="18" cy="17" r="1"/></svg>`,
+
+    y2k:
+        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><path d="M8 9c1-2 3-3 5-2" opacity=".6"/></svg>`,
+
+    cinematic:
+        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="14" height="12" rx="2"/><path d="M17 10l4-2.5v9L17 14"/></svg>`,
+
+    illustrated:
+        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 16l-5.5-5.5L7 19"/></svg>`,
+
+    scrapbook:
+        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="3" width="12" height="15" rx="1" transform="rotate(-6 11 10)"/><rect x="7" y="5" width="12" height="15" rx="1" transform="rotate(6 13 12)"/></svg>`
 
 };
 
@@ -244,6 +510,8 @@ const styles = {
             "Business dashboards",
             "Professional websites"
         ],
+
+        industries: ["saas-tech", "corporate"],
 
         characteristics: [
             "Lots of whitespace",
@@ -280,6 +548,8 @@ const styles = {
             "Premium websites"
         ],
 
+        industries: ["saas-tech", "ai-tech"],
+
         characteristics: [
             "Frosted glass",
             "Background blur",
@@ -314,6 +584,8 @@ const styles = {
             "Interactive controls",
             "Personal tools"
         ],
+
+        industries: ["mobile-apps"],
 
         characteristics: [
             "Soft shadows",
@@ -350,6 +622,8 @@ const styles = {
             "AI applications"
         ],
 
+        industries: ["saas-tech", "ai-tech"],
+
         characteristics: [
             "Modular cards",
             "Flexible layouts",
@@ -384,6 +658,8 @@ const styles = {
             "Dashboards",
             "Large applications"
         ],
+
+        industries: ["mobile-apps", "corporate"],
 
         characteristics: [
             "Elevation",
@@ -420,6 +696,8 @@ const styles = {
             "Administrative systems"
         ],
 
+        industries: ["corporate", "mobile-apps", "ecommerce"],
+
         characteristics: [
             "2D elements",
             "Simple icons",
@@ -454,6 +732,8 @@ const styles = {
             "Analytics dashboards",
             "Gaming"
         ],
+
+        industries: ["ai-tech", "saas-tech"],
 
         characteristics: [
             "Dark surfaces",
@@ -490,6 +770,8 @@ const styles = {
             "Product landing pages"
         ],
 
+        industries: ["startups-marketing", "ai-tech"],
+
         characteristics: [
             "Blurred gradients",
             "Color transitions",
@@ -524,6 +806,8 @@ const styles = {
             "Creative products",
             "AI products"
         ],
+
+        industries: ["startups-marketing", "creative-portfolio", "ecommerce"],
 
         characteristics: [
             "Color transitions",
@@ -560,6 +844,8 @@ const styles = {
             "Children's products"
         ],
 
+        industries: ["mobile-apps", "wellness"],
+
         characteristics: [
             "Rounded shapes",
             "Soft shadows",
@@ -594,6 +880,8 @@ const styles = {
             "Marketing websites",
             "Experimental products"
         ],
+
+        industries: ["creative-portfolio", "startups-marketing"],
 
         characteristics: [
             "Thick borders",
@@ -630,6 +918,8 @@ const styles = {
             "Design studios"
         ],
 
+        industries: ["creative-portfolio"],
+
         characteristics: [
             "Raw layouts",
             "Strong typography",
@@ -664,6 +954,8 @@ const styles = {
             "Food products",
             "Wellness applications"
         ],
+
+        industries: ["wellness"],
 
         characteristics: [
             "Natural shapes",
@@ -700,6 +992,8 @@ const styles = {
             "Content websites"
         ],
 
+        industries: ["publishing", "creative-portfolio"],
+
         characteristics: [
             "Large typography",
             "Strong grids",
@@ -735,11 +1029,272 @@ const styles = {
             "Technology products"
         ],
 
+        industries: ["ai-tech", "saas-tech"],
+
         characteristics: [
             "Dark backgrounds",
             "Glowing accents",
             "Sharp geometry",
             "Technology aesthetic"
+        ]
+
+    },
+
+
+    depth3d: {
+
+        name: "3D Depth UI",
+
+        icon: ICONS.depth3d,
+
+        description:
+            "Layered cards with real perspective and directional shadows, giving the interface physical depth.",
+
+        longDescription:
+            "3D Depth UI tilts interface elements in real 3D space using perspective and rotation, paired with strong directional shadows. It creates the floating, tactile feel popularized by modern WebGL and Spline-powered marketing sites, without needing WebGL.",
+
+        tags: [
+            "3D",
+            "Depth",
+            "Modern"
+        ],
+
+        bestFor: [
+            "Product launches",
+            "Tech marketing sites",
+            "Portfolio showcases",
+            "AI products"
+        ],
+
+        industries: ["ai-tech", "startups-marketing"],
+
+        characteristics: [
+            "Perspective transforms",
+            "Directional shadows",
+            "Floating layers",
+            "Tactile depth"
+        ]
+
+    },
+
+
+    liquidglass: {
+
+        name: "Liquid Glass",
+
+        icon: ICONS.liquidglass,
+
+        description:
+            "A refined, luminous evolution of glass surfaces with specular highlights and light-catching edges.",
+
+        longDescription:
+            "Liquid Glass follows Apple's newest visionOS/iOS design language. Deeper blur, brighter specular highlights and subtle refraction at panel edges create a glass surface that feels lit from within.",
+
+        tags: [
+            "Glass",
+            "Luminous",
+            "Premium"
+        ],
+
+        bestFor: [
+            "Premium apps",
+            "Consumer tech",
+            "Product launches",
+            "Portfolio sites"
+        ],
+
+        industries: ["saas-tech", "ai-tech"],
+
+        characteristics: [
+            "Specular highlights",
+            "Deep blur",
+            "Refractive edges",
+            "Luminous surfaces"
+        ]
+
+    },
+
+
+    grainy: {
+
+        name: "Grainy Gradient",
+
+        icon: ICONS.grainy,
+
+        description:
+            "Soft mesh gradients finished with a fine film-grain texture, trading the flat digital look for something printed and tactile.",
+
+        longDescription:
+            "Grainy Gradient layers a subtle noise texture over soft color-blurred gradients, a look popularized by recent startup landing pages. It softens what would otherwise be a flat, overly-digital gradient background.",
+
+        tags: [
+            "Textured",
+            "Soft",
+            "Trending"
+        ],
+
+        bestFor: [
+            "Startup landing pages",
+            "Product launches",
+            "Creative portfolios",
+            "SaaS marketing"
+        ],
+
+        industries: ["startups-marketing", "creative-portfolio"],
+
+        characteristics: [
+            "Mesh gradients",
+            "Film grain texture",
+            "Soft color blur",
+            "Printed feel"
+        ]
+
+    },
+
+
+    y2k: {
+
+        name: "Y2K / Retro Futurism",
+
+        icon: ICONS.y2k,
+
+        description:
+            "Glossy chrome surfaces, bold candy colors and chunky rounded shapes inspired by early-2000s optimism.",
+
+        longDescription:
+            "Y2K / Retro Futurism revives the glossy, saturated, chunky-shaped aesthetic of early-2000s tech and consumer products. It's deliberately loud, nostalgic and playful rather than corporate.",
+
+        tags: [
+            "Retro",
+            "Glossy",
+            "Playful"
+        ],
+
+        bestFor: [
+            "Youth brands",
+            "Consumer products",
+            "Music & entertainment",
+            "Creative products"
+        ],
+
+        industries: ["creative-portfolio", "startups-marketing"],
+
+        characteristics: [
+            "Glossy chrome surfaces",
+            "Bold candy colors",
+            "Chunky rounded shapes",
+            "Playful bounce"
+        ]
+
+    },
+
+
+    cinematic: {
+
+        name: "Cinematic Editorial",
+
+        icon: ICONS.cinematic,
+
+        description:
+            "Full-bleed photography, dramatic gradient overlays and premium serif type for a high-end brand feel.",
+
+        longDescription:
+            "Cinematic Editorial pairs full-bleed photography with a dark gradient overlay and restrained serif typography. It's the look premium agencies, luxury brands and high-end SaaS companies use to feel expensive and considered rather than templated.",
+
+        tags: [
+            "Cinematic",
+            "Premium",
+            "Photographic"
+        ],
+
+        bestFor: [
+            "Luxury brands",
+            "Premium agencies",
+            "High-end SaaS",
+            "Personal brands"
+        ],
+
+        industries: ["creative-portfolio", "publishing"],
+
+        characteristics: [
+            "Full-bleed photography",
+            "Dark gradient overlay",
+            "Serif typography",
+            "Restrained accents"
+        ]
+
+    },
+
+
+    illustrated: {
+
+        name: "Illustrated Product UI",
+
+        icon: ICONS.illustrated,
+
+        description:
+            "Friendly custom illustration in place of flat icons - the warm consumer-SaaS look used by Notion, Linear and Attio.",
+
+        longDescription:
+            "Illustrated Product UI replaces flat icon badges with small custom illustrations for each feature, giving the product a warmer, more human and more memorable feel than a purely geometric interface.",
+
+        tags: [
+            "Illustrated",
+            "Friendly",
+            "Consumer"
+        ],
+
+        bestFor: [
+            "Consumer SaaS",
+            "Onboarding flows",
+            "Productivity tools",
+            "Education apps"
+        ],
+
+        industries: ["saas-tech", "mobile-apps"],
+
+        characteristics: [
+            "Custom illustration",
+            "Warm color palette",
+            "Rounded shapes",
+            "Human, approachable feel"
+        ]
+
+    },
+
+
+    scrapbook: {
+
+        name: "Scrapbook Collage",
+
+        icon: ICONS.scrapbook,
+
+        description:
+            "Overlapping polaroid-style photo cards with a slight tilt, for a personal, handmade, lifestyle feel.",
+
+        longDescription:
+            "Scrapbook Collage arranges photography like a physical scrapbook: thick white borders, a gentle rotation and layered shadows, for brands that want to feel personal and handmade rather than corporate.",
+
+        tags: [
+            "Collage",
+            "Personal",
+            "Photographic"
+        ],
+
+        bestFor: [
+            "Lifestyle brands",
+            "Personal brands",
+            "Creative portfolios",
+            "Travel & hospitality"
+        ],
+
+        industries: ["creative-portfolio", "wellness"],
+
+        characteristics: [
+            "Polaroid-style framing",
+            "Layered photography",
+            "Gentle rotation",
+            "Handmade feel"
         ]
 
     }
@@ -752,6 +1307,8 @@ const styles = {
 ========================================= */
 
 let selectedStyle = "minimalism";
+
+let activeIndustryFilter = "all";
 
 let selectedColors = {
 
@@ -849,6 +1406,17 @@ function renderStyleList() {
     Object.entries(styles).forEach(
         ([key, style]) => {
 
+            const matchesFilter =
+                activeIndustryFilter === "all" ||
+                style.industries.includes(activeIndustryFilter) ||
+                key === selectedStyle;
+
+            if (!matchesFilter) {
+
+                return;
+
+            }
+
             const button =
                 document.createElement("button");
 
@@ -882,6 +1450,37 @@ function renderStyleList() {
     movePill();
 
 }
+
+
+/* =========================================
+   INDUSTRY QUICK-FILTER
+   (each style already lists what it's best
+   for - this just surfaces that as a filter
+   so a client can jump straight to styles
+   suited to their kind of business) --------
+========================================= */
+
+document.querySelectorAll(".industry-chip").forEach(chip => {
+
+    chip.addEventListener("click", () => {
+
+        activeIndustryFilter =
+            chip.dataset.industry;
+
+        document.querySelectorAll(".industry-chip").forEach(c => {
+
+            c.classList.toggle(
+                "active",
+                c === chip
+            );
+
+        });
+
+        renderStyleList();
+
+    });
+
+});
 
 
 /* =========================================
@@ -1075,6 +1674,8 @@ function selectStyle(key) {
 
     refreshPreviewNumbers();
 
+    saveStateToStorage();
+
 }
 
 
@@ -1189,6 +1790,10 @@ function updateColors() {
             selectedColors.background
         );
 
+    checkColorContrast();
+
+    saveStateToStorage();
+
 }
 
 
@@ -1199,6 +1804,108 @@ function updateColors() {
 function validHex(value) {
 
     return /^#[0-9A-F]{6}$/i.test(value);
+
+}
+
+
+/* =========================================
+   ACCESSIBILITY: CONTRAST CHECK
+   (WCAG relative-luminance contrast ratio -
+   warns if a chosen color combo would be
+   hard to read, before it ships) -----------
+========================================= */
+
+function hexToRgb(hex) {
+
+    const clean = hex.replace("#", "");
+
+    return {
+        r: parseInt(clean.substring(0, 2), 16),
+        g: parseInt(clean.substring(2, 4), 16),
+        b: parseInt(clean.substring(4, 6), 16),
+    };
+
+}
+
+function relativeLuminance({ r, g, b }) {
+
+    const [rs, gs, bs] = [r, g, b].map(channel => {
+
+        const c = channel / 255;
+
+        return c <= 0.03928
+            ? c / 12.92
+            : Math.pow((c + 0.055) / 1.055, 2.4);
+
+    });
+
+    return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+
+}
+
+function contrastRatio(hexA, hexB) {
+
+    const lumA = relativeLuminance(hexToRgb(hexA));
+
+    const lumB = relativeLuminance(hexToRgb(hexB));
+
+    const lighter = Math.max(lumA, lumB);
+
+    const darker = Math.min(lumA, lumB);
+
+    return (lighter + 0.05) / (darker + 0.05);
+
+}
+
+function checkColorContrast() {
+
+    const warningEl =
+        document.getElementById("contrastWarning");
+
+    if (!warningEl) {
+
+        return;
+
+    }
+
+    const AA_THRESHOLD = 4.5;
+
+    const vsWhite =
+        contrastRatio(selectedColors.primary, "#FFFFFF");
+
+    const vsBackground =
+        contrastRatio(selectedColors.primary, selectedColors.background);
+
+    const issues = [];
+
+    if (vsWhite < AA_THRESHOLD) {
+
+        issues.push(
+            `primary on white text is ${vsWhite.toFixed(1)}:1`
+        );
+
+    }
+
+    if (vsBackground < AA_THRESHOLD) {
+
+        issues.push(
+            `primary on your background is ${vsBackground.toFixed(1)}:1`
+        );
+
+    }
+
+    if (issues.length) {
+
+        warningEl.innerHTML =
+            `⚠ <strong>Contrast check:</strong> ${issues.join(" and ")} — below the WCAG AA minimum of 4.5:1. Consider a darker or more saturated shade for readability.`;
+
+        warningEl.classList.remove("hidden");
+
+    } else {
+
+        warningEl.classList.add("hidden");
+
+    }
 
 }
 
@@ -1507,9 +2214,19 @@ function createSummary() {
 }
 
 
-function openSummaryModal() {
+function openSummaryModal(options = {}) {
 
     createSummary();
+
+    hideSubmitStatus();
+
+    document.getElementById("shareLink").textContent =
+        "🔗 Copy Shareable Link";
+
+    document.getElementById("summaryHeading").textContent =
+        options.exitIntent
+            ? "Don't lose your picks!"
+            : "Selected Design Direction";
 
     modal.classList.remove(
         "hidden"
@@ -1684,19 +2401,445 @@ document.getElementById(
 
 
 /* =========================================
-   SEND TO AGENCY
-   (opens the visitor's email client with
-   the full selection pre-filled - works
-   with zero backend; swap the body of this
-   handler for a fetch() to a form endpoint
-   later if you want it to submit silently)
+   SHAREABLE LINK
+   (encodes the current style, colors, font
+   and added blocks into the URL so a client
+   can send their exact picks to a co-founder,
+   bookmark them, or pick up later - nothing
+   is lost by just closing the tab) ---------
 ========================================= */
+
+function getCurrentState() {
+
+    const fontStack =
+        preview.classList.contains("font-overridden")
+            ? preview.style.getPropertyValue("--preview-font").trim()
+            : "";
+
+    const blockKeys =
+        Array.from(
+            previewContent.querySelectorAll(".added-block")
+        ).map(el => el.dataset.blockKey);
+
+    return {
+        style: selectedStyle,
+        primary: selectedColors.primary,
+        secondary: selectedColors.secondary,
+        background: selectedColors.background,
+        font: fontStack,
+        blocks: blockKeys,
+    };
+
+}
+
+function buildShareUrl() {
+
+    const url =
+        new URL(window.location.href);
+
+    const params =
+        url.searchParams;
+
+    const state =
+        getCurrentState();
+
+    params.set("style", state.style);
+
+    params.set("primary", state.primary);
+
+    params.set("secondary", state.secondary);
+
+    params.set("background", state.background);
+
+    if (state.font) {
+
+        params.set("font", state.font);
+
+    } else {
+
+        params.delete("font");
+
+    }
+
+    if (state.blocks.length) {
+
+        params.set("blocks", state.blocks.join(","));
+
+    } else {
+
+        params.delete("blocks");
+
+    }
+
+    return url.toString();
+
+}
+
+
+/* =========================================
+   SESSION RECOVERY
+   (autosaves progress locally so a client
+   who closes the tab without sending or
+   copying a link can still pick up where
+   they left off, on the same device) -------
+========================================= */
+
+const STORAGE_KEY = "uiStylePlaygroundState";
+
+let initComplete = false;
+
+let hasInteracted = false;
+
+let hasSecuredPicks = false;
+
+function saveStateToStorage() {
+
+    /* skip entirely during the initial load
+       sequence - otherwise applying defaults
+       (or a shared link's state) would stomp
+       on a previous session's save before
+       maybeShowResumeBanner() ever gets to
+       read it */
+
+    if (!initComplete) {
+
+        return;
+
+    }
+
+    try {
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(getCurrentState())
+        );
+
+    } catch {
+
+        /* localStorage unavailable (private
+           browsing, storage disabled) - the
+           tool still works, it just won't
+           remember this session */
+
+    }
+
+    hasInteracted = true;
+
+}
+
+function loadStateFromStorage() {
+
+    try {
+
+        const raw =
+            localStorage.getItem(STORAGE_KEY);
+
+        return raw ? JSON.parse(raw) : null;
+
+    } catch {
+
+        return null;
+
+    }
+
+}
+
+function clearStoredState() {
+
+    try {
+
+        localStorage.removeItem(STORAGE_KEY);
+
+    } catch {
+
+        /* nothing to clean up */
+
+    }
+
+}
+
+function maybeShowResumeBanner() {
+
+    /* an explicit shared link always wins -
+       don't second-guess it with a saved
+       session from a previous visit */
+
+    if (urlParams.get("style")) {
+
+        return;
+
+    }
+
+    const saved =
+        loadStateFromStorage();
+
+    if (!saved) {
+
+        return;
+
+    }
+
+    const banner =
+        document.getElementById("resumeBanner");
+
+    if (!banner) {
+
+        return;
+
+    }
+
+    banner.classList.remove("hidden");
+
+    document.getElementById("resumeBtn")
+        .addEventListener("click", () => {
+
+            applyState(saved);
+
+            banner.classList.add("hidden");
+
+        }, { once: true });
+
+    document.getElementById("dismissResumeBtn")
+        .addEventListener("click", () => {
+
+            banner.classList.add("hidden");
+
+        }, { once: true });
+
+}
+
+
+/* =========================================
+   EXIT-INTENT SAVE PROMPT
+   (desktop only - there's no equivalent
+   "about to leave" signal on touch devices.
+   Fires at most once, and only if the
+   client actually changed something and
+   hasn't already sent or copied their picks) -
+========================================= */
+
+let exitIntentShown = false;
+
+document.addEventListener("mouseleave", event => {
+
+    if (exitIntentShown || !hasInteracted || hasSecuredPicks) {
+
+        return;
+
+    }
+
+    if (event.clientY > 0) {
+
+        return;
+
+    }
+
+    exitIntentShown = true;
+
+    openSummaryModal({ exitIntent: true });
+
+});
+
+
+document.getElementById(
+    "shareLink"
+).addEventListener(
+    "click",
+    async () => {
+
+        const url =
+            buildShareUrl();
+
+        const btn =
+            document.getElementById("shareLink");
+
+        hasSecuredPicks = true;
+
+        try {
+
+            await navigator.clipboard.writeText(url);
+
+            btn.textContent = "✓ Link Copied";
+
+        } catch {
+
+            window.prompt(
+                "Copy this link:",
+                url
+            );
+
+        }
+
+        setTimeout(() => {
+
+            btn.textContent =
+                "🔗 Copy Shareable Link";
+
+        }, 1800);
+
+    }
+);
+
+
+/* =========================================
+   DOWNLOAD DESIGN TOKENS
+   (turns the client's picks into a real,
+   drop-in-able CSS + Tailwind snippet, so
+   "we like this direction" becomes something
+   a dev can actually build with) -----------
+========================================= */
+
+function buildDesignTokensFile() {
+
+    const style =
+        styles[selectedStyle];
+
+    const fontStack =
+        preview.classList.contains("font-overridden")
+            ? preview.style.getPropertyValue("--preview-font").trim()
+            : "";
+
+    const fontFamilies =
+        fontStack
+            ? fontStack
+                .split(",")
+                .map(f => `"${f.trim().replace(/['"]/g, "")}"`)
+                .join(", ")
+            : null;
+
+    return (
+`/* ==========================================
+   DESIGN TOKENS
+   Generated from the UI Style Playground
+   Style: ${style.name}` +
+(clientInfo.client ? `
+   Client: ${clientInfo.client}` : "") +
+`
+========================================== */
+
+:root {
+  --color-primary: ${selectedColors.primary};
+  --color-secondary: ${selectedColors.secondary};
+  --color-background: ${selectedColors.background};` +
+(fontStack ? `
+  --font-family: ${fontStack};` : `
+  /* no custom font was chosen - this style's
+     own default typeface applies, see the
+     live site for the exact values */`) +
+`
+}
+
+/* Tailwind (tailwind.config.js -> theme.extend) */
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        primary: "${selectedColors.primary}",
+        secondary: "${selectedColors.secondary}",
+        background: "${selectedColors.background}",
+      },` +
+(fontFamilies ? `
+      fontFamily: {
+        sans: [${fontFamilies}],
+      },` : `
+      // font left as this style's default`) +
+`
+    },
+  },
+};
+`
+    );
+
+}
+
+document.getElementById(
+    "downloadTokens"
+).addEventListener(
+    "click",
+    () => {
+
+        hasSecuredPicks = true;
+
+        const content =
+            buildDesignTokensFile();
+
+        const blob =
+            new Blob([content], { type: "text/plain" });
+
+        const url =
+            URL.createObjectURL(blob);
+
+        const filename =
+            clientInfo.client
+                ? `${slugifyDomain(clientInfo.client).replace(".com", "")}-design-tokens.css`
+                : "design-tokens.css";
+
+        const link =
+            document.createElement("a");
+
+        link.href = url;
+
+        link.download = filename;
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        link.remove();
+
+        URL.revokeObjectURL(url);
+
+    }
+);
+
+
+/* =========================================
+   SEND TO AGENCY
+   (posts straight to FORM_ENDPOINT when one
+   is configured above, so submission doesn't
+   depend on the client having a mail app set
+   up; otherwise falls back to opening their
+   email client. Either way, an on-screen
+   status always tells the client what
+   happened - they're never left guessing) ---
+========================================= */
+
+const submitStatus =
+    document.getElementById("submitStatus");
+
+function showSubmitStatus(kind, text) {
+
+    submitStatus.textContent = text;
+
+    submitStatus.className =
+        `submit-status status-${kind}`;
+
+    submitStatus.classList.remove("hidden");
+
+}
+
+function hideSubmitStatus() {
+
+    submitStatus.classList.add("hidden");
+
+}
+
+function openMailtoFallback(subject, body) {
+
+    window.location.href =
+        `mailto:${SUBMIT_EMAIL}` +
+        `?subject=${encodeURIComponent(subject)}` +
+        `&body=${encodeURIComponent(body)}`;
+
+}
 
 document.getElementById(
     "sendSummary"
 ).addEventListener(
     "click",
-    () => {
+    async () => {
+
+        hasSecuredPicks = true;
 
         const style =
             styles[selectedStyle];
@@ -1706,12 +2849,83 @@ document.getElementById(
                 ? `${clientInfo.client} - UI style selection: ${style.name}`
                 : `New UI style selection: ${style.name}`;
 
-        const mailtoUrl =
-            `mailto:${SUBMIT_EMAIL}` +
-            `?subject=${encodeURIComponent(subject)}` +
-            `&body=${encodeURIComponent(buildSummaryText())}`;
+        const summaryText =
+            buildSummaryText();
 
-        window.location.href = mailtoUrl;
+        const sendBtn =
+            document.getElementById("sendSummary");
+
+        if (!FORM_ENDPOINT) {
+
+            openMailtoFallback(subject, summaryText);
+
+            showSubmitStatus(
+                "info",
+                "Your email app should now open with everything filled in — just hit send. " +
+                `Nothing open? Copy the summary above and email it to ${SUBMIT_EMAIL}.`
+            );
+
+            return;
+
+        }
+
+        const originalLabel =
+            sendBtn.textContent;
+
+        sendBtn.disabled = true;
+
+        sendBtn.textContent = "Sending…";
+
+        try {
+
+            const response = await fetch(FORM_ENDPOINT, {
+
+                method: "POST",
+
+                headers: { Accept: "application/json" },
+
+                body: new URLSearchParams({
+                    subject,
+                    client: clientInfo.client,
+                    contact: clientInfo.contact,
+                    style: style.name,
+                    primaryColor: selectedColors.primary,
+                    secondaryColor: selectedColors.secondary,
+                    background: selectedColors.background,
+                    font: currentFontLabel.textContent.trim(),
+                    summary: summaryText,
+                }),
+
+            });
+
+            if (!response.ok) {
+
+                throw new Error("submission failed");
+
+            }
+
+            showSubmitStatus(
+                "success",
+                "✓ Sent! We've received your selection and will be in touch shortly."
+            );
+
+        } catch {
+
+            openMailtoFallback(subject, summaryText);
+
+            showSubmitStatus(
+                "error",
+                "Couldn't submit that automatically, so your email app should now open instead — " +
+                `please hit send there, or email us directly at ${SUBMIT_EMAIL}.`
+            );
+
+        } finally {
+
+            sendBtn.disabled = false;
+
+            sendBtn.textContent = originalLabel;
+
+        }
 
     }
 );
@@ -1999,6 +3213,8 @@ function createBlock(key) {
 
     wrapper.id = id;
 
+    wrapper.dataset.blockKey = key;
+
     wrapper.draggable = true;
 
     wrapper.innerHTML = `
@@ -2014,6 +3230,8 @@ function createBlock(key) {
         .addEventListener("click", () => {
 
             wrapper.remove();
+
+            saveStateToStorage();
 
         });
 
@@ -2034,12 +3252,39 @@ function createBlock(key) {
 
         wrapper.classList.remove("dragging");
 
+        saveStateToStorage();
+
     });
 
     return wrapper;
 
 }
 
+
+/* adding a block to the preview: shared by
+   both the drag-and-drop path (desktop) and
+   a plain click (works everywhere, including
+   touch devices where HTML5 drag doesn't) */
+
+function addElementBlock(key) {
+
+    if (!blockTemplates[key]) {
+
+        return;
+
+    }
+
+    const block =
+        createBlock(key);
+
+    previewContent.insertBefore(
+        block,
+        dropZone
+    );
+
+    saveStateToStorage();
+
+}
 
 document.querySelectorAll(".element-chip").forEach(chip => {
 
@@ -2051,6 +3296,12 @@ document.querySelectorAll(".element-chip").forEach(chip => {
         );
 
         event.dataTransfer.effectAllowed = "copy";
+
+    });
+
+    chip.addEventListener("click", () => {
+
+        addElementBlock(chip.dataset.block);
 
     });
 
@@ -2119,15 +3370,7 @@ previewContent.addEventListener("drop", event => {
 
     if (data.startsWith("new:")) {
 
-        const key = data.slice(4);
-
-        if (blockTemplates[key]) {
-
-            const block = createBlock(key);
-
-            previewContent.insertBefore(block, dropZone);
-
-        }
+        addElementBlock(data.slice(4));
 
     }
 
@@ -2528,6 +3771,27 @@ const previewFrameEl =
 const currentFontLabel =
     document.getElementById("currentFontLabel");
 
+/* applying a font to the preview: shared by
+   drag-and-drop (desktop) and a plain click
+   (works everywhere, including touch devices
+   where HTML5 drag doesn't) */
+
+function applyFont(fontStack) {
+
+    preview.style.setProperty(
+        "--preview-font",
+        fontStack
+    );
+
+    preview.classList.add("font-overridden");
+
+    currentFontLabel.textContent =
+        fontStack.split(",")[0].replace(/['"]/g, "");
+
+    saveStateToStorage();
+
+}
+
 document.querySelectorAll(".font-chip").forEach(chip => {
 
     chip.addEventListener("dragstart", event => {
@@ -2538,6 +3802,12 @@ document.querySelectorAll(".font-chip").forEach(chip => {
         );
 
         event.dataTransfer.effectAllowed = "copy";
+
+    });
+
+    chip.addEventListener("click", () => {
+
+        applyFont(chip.dataset.font);
 
     });
 
@@ -2579,14 +3849,7 @@ previewFrameEl.addEventListener("drop", event => {
 
     event.preventDefault();
 
-    const fontStack = data.slice(5);
-
-    preview.style.setProperty("--preview-font", fontStack);
-
-    preview.classList.add("font-overridden");
-
-    currentFontLabel.textContent =
-        fontStack.split(",")[0].replace(/['"]/g, "");
+    applyFont(data.slice(5));
 
 });
 
@@ -2600,6 +3863,8 @@ document.getElementById("resetFont")
 
         currentFontLabel.textContent =
             "this style's default font";
+
+        saveStateToStorage();
 
     });
 
@@ -2617,3 +3882,13 @@ selectStyle(
 updateColors();
 
 applyClientPersonalization();
+
+applyStyleImages();
+
+setupOptionalExtras();
+
+restoreSharedState();
+
+maybeShowResumeBanner();
+
+initComplete = true;
